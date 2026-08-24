@@ -57,7 +57,6 @@ async function loadPost() {
     timelineItem.innerHTML = `
             <div class="item-info">
                 <div class="item-header">
-                     class="item-header">
                     <a href="/profile/?id=${post.user_id}"><img class="item-avatar" src="${avatarSrc}" alt=""></a>
                     <div class="item-header-text">
                         <span class="item-username">
