@@ -50,6 +50,15 @@
     margin-bottom: 2px;
 }
 
+.item-username a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.item-username a:hover {
+    text-decoration: underline;
+}
+
 .item-date {
     font-size: 10px;
     color: #777;

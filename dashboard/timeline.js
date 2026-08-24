@@ -65,9 +65,11 @@ async function loadTimeline() {
         timelineItem.innerHTML = `
             <div class="item-info">
                 <div class="item-header">
-                    <img class="item-avatar" src="${avatarSrc}" alt="">
+                    <a href="/profile/?id=${post.user_id}"><img class="item-avatar" src="${avatarSrc}" alt=""></a>
                     <div class="item-header-text">
-                        <span class="item-username">${post.users.display_name || post.users.username}</span>
+                        <span class="item-username">
+                            <a href="/profile/?id=${post.user_id}">${post.users.display_name || post.users.username}</a>
+                        </span>
                         <span class="item-date">${uploadedText}${editedText}</span>
                     </div>
                     ${!isOwner ? `<button type="button" class="item-follow follow-button-slot" data-user-id="${post.user_id}">Follow</button>` : ""}
@@ -310,10 +312,10 @@ async function loadComments(postId, timelineItem, commentPanel) {
         const editedTag = comment.edited_at ? " (edited)" : "";
         const timeText = formatUploaded(comment.created_at);
         divComment.innerHTML = `
-            <img class="comment-avatar" src="${avatarSrc}" alt="">
+            <a href="/profile/?id=${comment.user_id}"><img class="comment-avatar" src="${avatarSrc}" alt=""></a>
             <div class="comment-body">
                 <div class="comment-header">
-                    <a href="profile.html?id=${comment.user_id}" class="comment-username-link">${comment.users.username}</a>
+                    <a href="/profile/?id=${comment.user_id}" class="comment-username-link">${comment.users.username}</a>
                     <span class="comment-timestamp">${timeText}${editedTag}</span>
                 </div>
                 <div class="comment-text-display">${comment.comment_text || ""}</div>
