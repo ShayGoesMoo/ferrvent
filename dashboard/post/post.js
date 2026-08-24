@@ -57,9 +57,12 @@ async function loadPost() {
     timelineItem.innerHTML = `
             <div class="item-info">
                 <div class="item-header">
-                    <img class="item-avatar" src="${avatarSrc}" alt="">
+                     class="item-header">
+                    <a href="/profile/?id=${post.user_id}"><img class="item-avatar" src="${avatarSrc}" alt=""></a>
                     <div class="item-header-text">
-                        <span class="item-username">${post.users.username}</span>
+                        <span class="item-username">
+                            <a href="/profile/?id=${post.user_id}">${post.users.display_name || post.users.username}</a>
+                        </span>
                         <span class="item-date">${uploadedText}${editedText}</span>
                     </div>
                     ${!isOwner ? `<button type="button" class="item-follow follow-button-slot" data-user-id="${post.user_id}">Follow</button>` : ""}
@@ -302,7 +305,7 @@ async function loadComments(postId, timelineItem, commentPanel) {
             <img class="comment-avatar" src="${avatarSrc}" alt="">
             <div class="comment-body">
                 <div class="comment-header">
-                    <a href="profile.html?id=${comment.user_id}" class="comment-username-link">${comment.users.username}</a>
+                    <a href="/profile/?id=${comment.user_id}" class="comment-username-link">${comment.users.username}</a>
                     <span class="comment-timestamp">${timeText}${editedTag}</span>
                 </div>
                 <div class="comment-text-display">${comment.comment_text || ""}</div>
