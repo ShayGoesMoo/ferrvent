@@ -28,6 +28,7 @@
     background-color: #000;
     border-right: 2px solid #111;
     z-index: 100;
+    padding: 10px;
 }
 
 .left-bar-links {
@@ -78,7 +79,7 @@
     margin: auto;
     margin-top: auto;
     margin-bottom: 12px;
-    width: 80%;
+    width: 100%;
     transition: 0.3s ease;
 }
 

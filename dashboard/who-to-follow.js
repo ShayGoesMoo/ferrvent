@@ -47,7 +47,7 @@ async function loadWhoToFollow() {
     }
 
     listEl.innerHTML = picks.map(user => `
-        <a href="/profile/" class="who-to-follow-item">
+        <a href="/profile/?id=${user.id}" class="who-to-follow-item">
             <img class="who-to-follow-avatar" src="${user.avatar_url || '/assets/pfp.png'}" alt="">
             <div class="who-to-follow-name">
                 <span class="who-to-follow-display">${user.display_name || user.username}</span>

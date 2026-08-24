@@ -41,7 +41,7 @@ function renderResults(users) {
     }
 
     searchResults.innerHTML = users.map(user => `
-        <a href="/profile/" class="search-result-item" data-user-id="${user.id}">
+        <a href="/profile/?id=${user.id}" class="search-result-item" data-user-id="${user.id}">
             <img class="search-result-avatar" src="${user.avatar_url || '/assets/pfp.png'}" alt="">
             <div class="search-result-name">
                 <span class="search-result-display">${user.display_name || user.username}</span>
