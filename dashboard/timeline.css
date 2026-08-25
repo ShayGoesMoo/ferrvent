@@ -437,3 +437,23 @@
 .image-modal-close:hover {
     background: #A4243B;
 }
+
+.story-title {
+    margin: 0 0 8px;
+}
+
+.keep-reading-btn {
+    display: inline;
+    background: none;
+    border: none;
+    color: #A4243B;
+    font-size: inherit;
+    font-weight: inherit;
+    font-family: inherit;
+    padding: 0;
+    cursor: pointer;
+}
+
+.keep-reading-btn:hover {
+    text-decoration: underline;
+}

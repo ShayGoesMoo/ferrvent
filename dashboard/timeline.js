@@ -19,7 +19,7 @@ async function loadTimeline() {
     // fetch data
     const { data: posts, error } = await supabaseClient
         .from("posts")
-        .select("id, user_id, media_url, thumbnail_url, title, caption, created_at, edited_at, visibility, users!posts_user_id_fkey(username, avatar_url, display_name)")
+        .select("id, user_id, media_url, thumbnail_url, title, caption, media_type, created_at, edited_at, visibility, users!posts_user_id_fkey(username, avatar_url, display_name)")
         .not("visibility", "in", "(archived,private)")
         .order("created_at", { ascending: false });
 
@@ -88,12 +88,19 @@ async function loadTimeline() {
                     ` : ""}
                 </div>
 
-                <div class="item-body">
-                    <p class="item-caption">
-                        ${post.caption || ""}
-                    </p>
-                </div>
-                ${post.media_url ? `<img class="item-media" src="${post.media_url}" alt="">` : ""}
+                ${post.media_type === "story" ? `
+                    <div class="item-body">
+                        <h4 class="story-title">${post.title}</h4>
+                        <p class="item-caption story-caption" data-full-text="${escapeHtml(post.caption || "")}">${getExcerpt(post.caption)}${getWordCount(post.caption) > 40 ? ` <button type="button" class="keep-reading-btn">Keep reading</button>` : ""}</p>
+                    </div>
+                ` : `
+                    <div class="item-body">
+                        <p class="item-caption">
+                            ${post.caption || ""}
+                        </p>
+                    </div>
+                    ${post.media_url ? `<img class="item-media" src="${post.media_url}" alt="">` : ""}
+                `}
 
                 <div class="item-actions" aria-label="Like">
                     <button class="interaction" id="like-btn" data-post-id="${post.id}">
@@ -236,6 +243,7 @@ async function loadLikes(postId, postOwnerId, cardElement) {
 // open the comment panel
 async function openComments(postId, timelineItem, commentPanel) {
     const commentBtn = timelineItem.querySelector("#comment-btn");
+    if (!commentBtn) return;
 
     commentBtn.addEventListener("click", () => {
         const isOpen = commentPanel.style.display !== "none";
@@ -500,6 +508,32 @@ function formatUploaded(dateStr) {
     if (diffDays < 365) return `${Math.floor(diffDays / 30)} month${Math.floor(diffDays / 30) === 1 ? "" : "s"} ago`;
     return `${Math.floor(diffDays / 365)} year${Math.floor(diffDays / 365) === 1 ? "" : "s"} ago`;
 }
+
+function getWordCount(text) {
+    if (!text) return 0;
+    return text.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function getExcerpt(text, maxWords = 40) {
+    if (!text) return "";
+    const words = text.trim().split(/\s+/);
+    if (words.length <= maxWords) return escapeHtml(text);
+    return escapeHtml(words.slice(0, maxWords).join(" ")) + "…";
+}
+
+function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".keep-reading-btn");
+    if (!btn) return;
+
+    const caption = btn.closest(".story-caption");
+    caption.textContent = caption.dataset.fullText;
+});
 
 loadTimeline();
 

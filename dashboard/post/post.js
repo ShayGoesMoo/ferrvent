@@ -21,7 +21,7 @@ async function loadPost() {
 
     const { data: post, error } = await supabaseClient
         .from("posts")
-        .select("id, user_id, media_url, thumbnail_url, title, caption, created_at, edited_at, visibility, users!posts_user_id_fkey(username, avatar_url)")
+        .select("id, user_id, media_url, thumbnail_url, title, caption, media_type, created_at, edited_at, visibility, users!posts_user_id_fkey(username, avatar_url, display_name)")
         .eq("id", postId)
         .single();
 
@@ -80,12 +80,19 @@ async function loadPost() {
                     ` : ""}
                 </div>
 
-                <div class="item-body">
-                    <p class="item-caption">
-                        ${post.caption || ""}
-                    </p>
-                </div>
-                ${post.media_url ? `<img class="item-media" src="${post.media_url}" alt="">` : ""}
+                ${post.media_type === "story" ? `
+                    <div class="item-body">
+                        <h4 class="story-title">${post.title}</h4>
+                        <p class="item-caption">${post.caption || ""}</p>
+                    </div>
+                ` : `
+                    <div class="item-body">
+                        <p class="item-caption">
+                            ${post.caption || ""}
+                        </p>
+                    </div>
+                    ${post.media_url ? `<img class="item-media" src="${post.media_url}" alt="">` : ""}
+                `}
 
                 <div class="item-actions" aria-label="Like">
                     <button class="interaction" id="like-btn" data-post-id="${post.id}">

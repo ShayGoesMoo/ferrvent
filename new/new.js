@@ -69,52 +69,77 @@ createForm.addEventListener("submit", async (e) => {
         return;
     }
 
-    const caption = captionInput.value.trim();
-
-    if (!caption && !selectedFile) {
-        showToast("Add a caption or a photo before posting.", "error");
-        return;
-    }
-
     postBtn.disabled = true;
     postBtn.textContent = "Posting...";
 
-    let mediaUrl = null;
-    let mediaType = "text";
+    let insertPayload;
 
-    if (selectedFile) {
-        const fileExt = selectedFile.name.split(".").pop();
-        const filePath = `${session.user.id}/${crypto.randomUUID()}.${fileExt}`;
+    if (activePostType === "story") {
+        const title = document.getElementById("story-title").value.trim();
+        const storyBody = document.getElementById("story-body").value.trim();
 
-        const { error: uploadError } = await supabaseClient.storage
-            .from("post-media")
-            .upload(filePath, selectedFile);
-
-        if (uploadError) {
-            showToast("Failed to upload file: " + uploadError.message, "error");
+        if (!title || !storyBody) {
+            showToast("Add a title and some story text before posting.", "error");
             postBtn.disabled = false;
             postBtn.textContent = "Post";
             return;
         }
 
-        const { data: urlData } = supabaseClient.storage
-            .from("post-media")
-            .getPublicUrl(filePath);
+        insertPayload = {
+            user_id: session.user.id,
+            media_url: null,
+            media_type: "story",
+            title: title,
+            caption: storyBody,
+        };
+    } else {
+        const caption = captionInput.value.trim();
 
-        mediaUrl = urlData.publicUrl;
-        mediaType = detectedMediaType;
+        if (!caption && !selectedFile) {
+            showToast("Add a caption or a photo before posting.", "error");
+            postBtn.disabled = false;
+            postBtn.textContent = "Post";
+            return;
+        }
+
+        let mediaUrl = null;
+        let mediaType = "text";
+
+        if (selectedFile) {
+            const fileExt = selectedFile.name.split(".").pop();
+            const filePath = `${session.user.id}/${crypto.randomUUID()}.${fileExt}`;
+
+            const { error: uploadError } = await supabaseClient.storage
+                .from("post-media")
+                .upload(filePath, selectedFile);
+
+            if (uploadError) {
+                showToast("Failed to upload file: " + uploadError.message, "error");
+                postBtn.disabled = false;
+                postBtn.textContent = "Post";
+                return;
+            }
+
+            const { data: urlData } = supabaseClient.storage
+                .from("post-media")
+                .getPublicUrl(filePath);
+
+            mediaUrl = urlData.publicUrl;
+            mediaType = detectedMediaType;
+        }
+
+        insertPayload = {
+            user_id: session.user.id,
+            media_url: mediaUrl,
+            media_type: mediaType,
+            title: null,
+            caption: caption,
+        };
     }
 
     const { data: newPost, error: insertError } = await supabaseClient
         .from("posts")
-        .insert([
-            {
-                user_id: session.user.id,
-                media_url: mediaUrl,
-                media_type: mediaType,
-                caption: caption,
-            },
-        ])
+        .insert([insertPayload])
         .select()
         .single();
 
@@ -125,8 +150,27 @@ createForm.addEventListener("submit", async (e) => {
         return;
     }
 
-    window.location.href = `/dashboard/post/?id=${newPost.id}`;});
+    window.location.href = `/dashboard/post/?id=${newPost.id}`;
+});
 
 document.getElementById("cancel-btn").addEventListener("click", () => {
     window.location.href = "../dashboard/";
+});
+
+const tabBtns = document.querySelectorAll(".post-type-tabs .tab-btn");
+const panels = document.querySelectorAll(".tab-panel");
+let activePostType = "post";
+
+tabBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        tabBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const tab = btn.dataset.tab;
+        activePostType = tab;
+
+        panels.forEach(panel => {
+            panel.style.display = panel.dataset.panel === tab ? "block" : "none";
+        });
+    });
 });

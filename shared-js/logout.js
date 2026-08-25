@@ -1,15 +1,19 @@
 async function updateAuthButton() {
     const { data: { session } } = await supabaseClient.auth.getSession();
-    const authBtn = document.getElementById("tab-preferences");
+    const authLink = document.getElementById("auth-link");
+    const authLinkText = document.getElementById("auth-link-text");
 
     if (session) {
-        authBtn.textContent = "Logout";
-        authBtn.onclick = handleLogout;
-    } else {
-        authBtn.textContent = "Login";
-        authBtn.onclick = () => {
-            window.location.href = "/auth/";
+        authLinkText.textContent = "Log Out";
+        authLink.href = "#";
+        authLink.onclick = (e) => {
+            e.preventDefault();
+            handleLogout();
         };
+    } else {
+        authLinkText.textContent = "Log in";
+        authLink.href = "../auth/";
+        authLink.onclick = null;
     }
 }
 

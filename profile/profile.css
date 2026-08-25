@@ -6,8 +6,8 @@
 }
 
 .profile-header-avatar {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     border-radius: 12px;
     object-fit: cover;
     flex-shrink: 0;
@@ -16,7 +16,7 @@
 .profile-header-info {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     min-width: 0;
     flex: 1;
 }
@@ -58,7 +58,6 @@
 }
 
 .profile-bio {
-    margin: 6px 0 0;
     white-space: pre-wrap;
     overflow-wrap: break-word;
 }
@@ -66,7 +65,6 @@
 .profile-stats {
     display: flex;
     gap: 16px;
-    margin-top: 6px;
     color: #999;
 }
 

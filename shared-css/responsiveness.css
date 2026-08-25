@@ -108,6 +108,18 @@
         display: none; /* replace with a floating action button instead, see note below */
     }
 
+    #auth-link {
+        width: auto;
+        margin: 0;
+        background-color: transparent;
+        border-radius: 0;
+        padding: 8px;
+    }
+
+    #auth-link:hover {
+        background-color: #090909;
+    }
+
     .column-layout {
         margin-left: 0;
         padding: 0 12px 70px; /* bottom padding clears the fixed bottom nav */

@@ -54,30 +54,53 @@
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);"><path fill="currentColor" d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5v2H5v14h14v-5z"></path><path fill="currentColor" d="M21 7h-4V3h-2v4h-4v2h4v4h2V9h4z"></path></svg>
                         <span>Create</span>
                     </a>
+
+                    <a href="../auth/" class="left-bar-link" id="auth-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);">
+                            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <path d="M16 17l5-5-5-5"/>
+                                <path d="M21 12H9"/>
+                            </g>
+                        </svg>
+                        <span id="auth-link-text">Log Out</span>
+                    </a>
                 </nav>
             </aside>
 
             <aside class="center-bar">
                 <div class="main-view">
+                    <div class="post-type-tabs">
+                        <button type="button" class="tab-btn active" data-tab="post">Image Post</button>
+                        <button type="button" class="tab-btn" data-tab="story">Literature</button>
+                    </div>
+
                     <form id="create-new">
-                        <div class="file-panel" id="file-panel">
-                            <div class="details-panel">
-                                <label>Add caption or text</label>
-                                <textarea id="caption" name="caption" placeholder="Describe this post..." rows="6" maxlength="1000"></textarea>
+                        <div class="tab-panel" data-panel="post">
+                            <div class="file-panel" id="file-panel">
+                                <input type="file" id="file-input" accept="image/gif" hidden>
+                                <div class="file-placeholder" id="file-placeholder">
+                                    <p>Click to insert a photo or gif</p>
+                                    <span class="file-hint">Max 10mb</span>
+                                </div>
+                                <div class="preview-wrapper" id="preview-wrapper" style="display: none;">
+                                    <img id="preview-file" alt="Preview">
+                                    <button type="button" class="change-file-btn" id="change-file-btn">Change</button>
+                                    <button type="button" class="remove-file-btn" id="remove-file-btn">Remove</button>
+                                </div>
+                                <div class="details-panel">
+                                    <label>Caption</label>
+                                    <textarea id="caption" name="caption" placeholder="Describe this post..." rows="6" maxlength="200"></textarea>
+                                </div>
                             </div>
-                            <label>Insert file (image or gif)</label>
-                            <input type="file" id="file-input" accept="image/gif" hidden>
-                            <div class="file-placeholder" id="file-placeholder">
-                                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 16V4m0 0L7 9m5-5 5 5M5 20h14"/>
-                                </svg>
-                                <p>Click to insert a photo or gif</p>
-                                <span class="file-hint">Max 10mb</span>
-                            </div>
-                            <div class="preview-wrapper" id="preview-wrapper" style="display: none;">
-                                <img id="preview-file" alt="Preview">
-                                <button type="button" class="change-file-btn" id="change-file-btn">Change</button>
-                                <button type="button" class="remove-file-btn" id="remove-file-btn">Remove</button>
+                        </div>
+
+                        <div class="tab-panel" data-panel="story" style="display: none;">
+                            <div class="story-form">
+                                <label>Title</label>
+                                <input type="text" id="story-title" name="title" placeholder="Give your story a title..." maxlength="120">
+                                <label>Story</label>
+                                <textarea id="story-body" name="story-body" placeholder="Write your story..." rows="16"></textarea>
                             </div>
                         </div>
                     </form>
