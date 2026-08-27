@@ -87,20 +87,6 @@
     background-color: #660d1e;
 }
 
-#auth-link {
-    color: inherit;
-    background-color: #000;
-    border-radius: 12px;
-    justify-content: center;
-    width: 100%;
-    transition: 0.3s ease;
-    border: 2px solid #111;
-}
-
-#auth-link:hover {
-    background-color: #A4243B;
-}
-
 .mobile-fab {
     display: none;
 }

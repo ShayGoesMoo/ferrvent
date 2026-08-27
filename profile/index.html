@@ -14,131 +14,147 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
-
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5281543018726539" crossorigin="anonymous"></script>
     </head>
     <body>
-        <main class="column-layout">
-            <aside class="left-bar">
-                <div class="left-bar-logo">
-                    
-                </div>
+        <div class="nav-bar">
+            <div class="search-wrapper">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M11.5 11.5L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
 
-                <nav class="left-bar-links">
-                    <a href="../dashboard/" class="left-bar-link" id="dashboard-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);"><path fill="currentColor" d="M12 3s-6.186 5.34-9.643 8.232A1.04 1.04 0 0 0 2 12a1 1 0 0 0 1 1h2v7a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-4h4v4a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-7h2a1 1 0 0 0 1-1a.98.98 0 0 0-.383-.768C18.184 8.34 12 3 12 3"></path></svg>
-                        <span>Home</span>
-                    </a>
+                <input type="text" id="search-input" class="search-input" placeholder="Search users or posts...">
 
-                    <a href="../discover/" class="left-bar-link" id="discover-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M11.307 9.739L15 9l-.739 3.693a2 2 0 0 1-1.568 1.569L9 15l.739-3.693a2 2 0 0 1 1.568-1.568"></path></g></svg>
-                        <span>Discover</span>
-                    </a>
-
-                    <a href="../mail/" class="left-bar-link" id="mail-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="m3 7l9 6l9-6"></path></g></svg>
-                        <span>Mail</span>
-                    </a>
-
-                    <a href="../settings/" class="left-bar-link" id="settings-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);"><path fill="currentColor" d="m9.25 22l-.4-3.2q-.325-.125-.612-.3t-.563-.375L4.7 19.375l-2.75-4.75l2.575-1.95Q4.5 12.5 4.5 12.338v-.675q0-.163.025-.338L1.95 9.375l2.75-4.75l2.975 1.25q.275-.2.575-.375t.6-.3l.4-3.2h5.5l.4 3.2q.325.125.613.3t.562.375l2.975-1.25l2.75 4.75l-2.575 1.95q.025.175.025.338v.674q0 .163-.05.338l2.575 1.95l-2.75 4.75l-2.95-1.25q-.275.2-.575.375t-.6.3l-.4 3.2zm2.8-6.5q1.45 0 2.475-1.025T15.55 12t-1.025-2.475T12.05 8.5q-1.475 0-2.488 1.025T8.55 12t1.013 2.475T12.05 15.5"></path></svg>
-                        <span>Settings</span>
-                    </a>
-
-                    <a href="../profile/" class="left-bar-link active" id="profile-link">
-                        <img class="profile-avatar" src="../public/assets/default profile picture.png" alt="">
-                        <span class="profile-name">Profile</span>
-                    </a>
-
-                    <a href="../new/" class="left-bar-link" id="new-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);"><path fill="currentColor" d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5v2H5v14h14v-5z"></path><path fill="currentColor" d="M21 7h-4V3h-2v4h-4v2h4v4h2V9h4z"></path></svg>
-                        <span>Create</span>
-                    </a>
-
-                    <a href="../auth/" class="left-bar-link" id="auth-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);">
-                            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                                <path d="M16 17l5-5-5-5"/>
-                                <path d="M21 12H9"/>
-                            </g>
-                        </svg>
-                        <span id="auth-link-text">Log Out</span>
-                    </a>
-                </nav>
-            </aside>
-
-            <aside class="center-bar">
-                <div class="topic-wraper">
-                    <div class="topic-tabs">
-                        <button type="button" class="tab-btn active" id="tab-recent" data-tab="recent">Recent</button>
-                        <button type="button" class="tab-btn" id="tab-following" data-tab="following">Following</button>
-                        <button type="button" class="tab-btn" id="tab-preferences">Preferences</button>
-                    </div>
-                </div>
-
-                <div class="profile-header">
-                    <img class="profile-header-avatar" id="profile-avatar" src="/assets/pfp.png" alt="">
-                    <div class="profile-header-info">
-                        <div class="profile-header-top">
-                            <h2 id="profile-display-name">Loading...</h2>
-                            <button type="button" class="item-follow" id="profile-follow-btn" style="display: none;">Follow</button>
-                            <a href="../settings/" class="item-edit" id="profile-edit-btn" style="display: none;">Edit Profile</a>
-                        </div>
-                        <span class="profile-username" id="profile-username"></span>
-                        <div class="profile-stats">
-                            <span><strong id="profile-post-count">0</strong> Posts</span>
-                            <span class="stat-clickable" id="stat-followers"><strong id="profile-follower-count">0</strong> Followers</span>
-                            <span class="stat-clickable" id="stat-following"><strong id="profile-following-count">0</strong> Following</span>
-                        </div>
-                        <p class="profile-bio" id="profile-bio"></p>
-                    </div>
-                </div>
-
-                <div class="profile-post-grid" id="profile-post-grid"></div>
-                <div class="profile-empty" id="profile-empty" style="display: none;">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
-                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                        <circle cx="9" cy="9" r="2" />
-                        <path d="M21 15l-5-5L5 21" />
+                <button class="search-clear" id="search-clear" style="display:none;" aria-label="Clear search">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     </svg>
-                    <p id="profile-empty-text">No posts yet</p>
-                </div>
+                </button>
 
-                <div class="follow-modal" id="follow-modal">
-                    <div class="follow-modal-box">
-                        <div class="follow-modal-header">
-                            <h3 id="follow-modal-title">Followers</h3>
-                            <button type="button" class="follow-modal-close" id="follow-modal-close" aria-label="Close">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M18 6L6 18M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="follow-modal-list" id="follow-modal-list"></div>
+                <div class="search-suggestions" id="search-suggestions"></div>
+            </div>
+
+            <nav class="nav-links">
+                <a href="../dashboard/">
+                    <span>Home</span>
+                </a>
+                <p>|</p>
+                <a href="../mail/">
+                    <span>Mail</span>
+                </a>
+                <p>|</p>
+                <div class="profile-dropdown">
+                    <button class="profile-trigger">
+                        <span class="profile-name">Guest</span>
+                        <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+
+                    <div class="dropdown-menu">
+                        <a href="../profile/" class="dropdown-item">
+                            <img class="profile-avatar" src="/assets/pfp.png" alt="">
+                            <span class="profile-blog">Guest's Blog</span>
+                        </a>
+                        <a href="../auth/" class="dropdown-item" id="auth-link">
+                            <span id="auth-link-text">Log out</span>
+                        </a>
                     </div>
                 </div>
-            </aside>
+            </nav>
+        </div>
 
-            <aside class="right-bar">
-                <input type="search" placeholder="Looking for something...">
-            </aside>
-        </main>
+        <div class="main-thing">
+            <div class="profile-box">
+                <div class="header-img-placeholder">
+                    <img class="header-img" id="header-img" src="" alt="">
+                    <div class="header-bar">
+                        <a href="" id="profile-edit-btn" class="edit-link" style="display:none;">
+                            <span>Edit Profile</span>
+                        </a>
+                        <button id="profile-follow-btn" class="edit-link" style="display:none;">Follow</button>
+                    </div>
+                </div>
 
-        <button type="button" class="mobile-fab" id="mobile-new-post-btn" aria-label="New Post">
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);"><path fill="currentColor" d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5v2H5v14h14v-5z"></path><path fill="currentColor" d="M21 7h-4V3h-2v4h-4v2h4v4h2V9h4z"></path></svg>
-        </button>
+                <div class="three-column">
+                    <div class="left">
+
+                        <div class="profile-info">
+                            <img id="profile-avatar" class="profile-pic" src="" alt="">
+                            <p id="profile-display-name" class="profile-display-name"></p>
+                            <p id="profile-username" class="profile-username"></p>
+                            <p id="profile-bio" class="profile-bio"></p>
+                        </div>                  
+
+                        
+                    </div>
+
+                    <div class="middle">
+                        <div class="posts-box">
+                            <div class="posts-tabs" id="posts-grid-container">
+                                <button class="tabs-btn active" data-tab="photos">Photos</button>
+                                <button class="tabs-btn" data-tab="text">Text Posts</button>
+                            </div>
+
+                            <div class="posts-grid-content" id="posts-grid-content"></div>
+                        </div>
+                    </div>
+
+                    <div class="right">
+                        <div class="activity-box">
+                            <h3>Activity</h3>
+                            <div class="stats-list">
+                                <p class="stat"><span id="stat-likes" class="stat-number">0</span> Likes</p>
+                                <p class="stat"><span id="stat-friends" class="stat-number">0</span> Friends</p>
+                                <p class="stat"><span id="stat-posts" class="stat-number">0</span> Posts</p>
+                            </div>
+                        </div>
+
+                        <div class="best-friends">
+                            <h3>Friends</h3>
+                            <div id="friends-list" class="friends-list">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="bottom">
+            <div class="footer-bar">
+                <p id="profile-joindate" class="profile-joindate"></p>
+
+                <a href="" class="footer-link">
+                    
+                </a>
+            </div>
+        </footer>
+
+        <script>
+            const trigger = document.querySelector('.profile-trigger');
+            const menu = document.querySelector('.dropdown-menu');
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menu.classList.toggle('open');
+                trigger.classList.toggle('open');
+            });
+
+            document.addEventListener('click', () => {
+                menu.classList.remove('open');
+                trigger.classList.remove('open');
+            });
+
+            document.addEventListener('click', () => {
+                menu.classList.remove('open');
+            });
+        </script>
 
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
         <script src="../shared-js/supabase-config.js"></script>
         <script src="../shared-js/update-avatar.js"></script>
         <script src="../shared-js/logout.js"></script>
         <script src="../profile/profile.js"></script>
-
-        <script>
-            document.querySelector("#mobile-new-post-btn").addEventListener("click", () => {
-                window.location.href = "../new/";
-            })
-        </script>
+        <script src="../shared-js/search.js"></script>
     </body>
 </html>

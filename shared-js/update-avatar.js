@@ -2,6 +2,7 @@ async function updateAvatar() {
     const { data: { session } } = await supabaseClient.auth.getSession();
     const avatarImg = document.querySelector(".profile-avatar");
     const profileName = document.querySelector(".profile-name");
+    const profileBlog = document.querySelector(".profile-blog");
 
     if (!avatarImg) return; // page might not have this element
 
@@ -11,7 +12,7 @@ async function updateAvatar() {
 
     const { data: userRow, error } = await supabaseClient
         .from("users")
-        .select("avatar_url, display_name")
+        .select("avatar_url, display_name, username")
         .eq("id", session.user.id)
         .single();
 
@@ -25,7 +26,8 @@ async function updateAvatar() {
     }
 
     if (profileName) {
-        profileName.textContent = userRow.display_name || "Profile";
+        profileName.textContent = "Hello, " + userRow.display_name + "!" || "Guest";
+        profileBlog.textContent = "@" + userRow.username|| "Guest";
     }
 }
 

@@ -11,10 +11,10 @@ async function loadProfile() {
     const profileId = params.get("id") || currentUserId;
     const isOwnProfile = profileId === currentUserId;
 
-    // 1. load the profile's user row
+    // 1. profile info
     const { data: profileUser, error: userError } = await supabaseClient
         .from("users")
-        .select("id, display_name, username, avatar_url, bio")
+        .select("id, display_name, username, avatar_url, banner_url, bio, created_at")
         .eq("id", profileId)
         .single();
 
@@ -24,78 +24,185 @@ async function loadProfile() {
     }
 
     document.getElementById("profile-avatar").src = profileUser.avatar_url || "/assets/pfp.png";
+    document.getElementById("header-img").src = profileUser.banner_url || "/assets/bnr.png";
     document.getElementById("profile-display-name").textContent = profileUser.display_name || profileUser.username;
     document.getElementById("profile-username").textContent = `@${profileUser.username}`;
     document.getElementById("profile-bio").textContent = profileUser.bio || "No bio yet.";
+    document.getElementById("profile-joindate").textContent = `Member since ${formatDate(profileUser.created_at)}`;
 
-    // 2. show edit or follow button depending on whose profile this is
     if (isOwnProfile) {
         document.getElementById("profile-edit-btn").style.display = "inline-flex";
     } else {
-        const followBtn = document.getElementById("profile-follow-btn");
-        followBtn.style.display = "inline-flex";
-
-        const { data: existingFollow } = await supabaseClient
-            .from("follows")
-            .select("follower_id")
-            .eq("follower_id", currentUserId)
-            .eq("following_id", profileId)
-            .maybeSingle();
-
-        let isFollowing = !!existingFollow;
-        followBtn.textContent = isFollowing ? "Following" : "Follow";
-
-        followBtn.addEventListener("click", async () => {
-            if (isFollowing) {
-                await supabaseClient
-                    .from("follows")
-                    .delete()
-                    .eq("follower_id", currentUserId)
-                    .eq("following_id", profileId);
-                isFollowing = false;
-                followBtn.textContent = "Follow";
-            } else {
-                await supabaseClient
-                    .from("follows")
-                    .insert([{ follower_id: currentUserId, following_id: profileId }]);
-                isFollowing = true;
-                followBtn.textContent = "Following";
-            }
-            loadStats(profileId);
-        });
+        setupFollowButton(currentUserId, profileId);
     }
 
-    // 3. stats
-    loadStats(profileId);
+    // 2. posts
+    loadPosts(profileId);
 
-    // 4. posts grid
-    const { data: posts, error: postsError } = await supabaseClient
+    // 3. best friends
+    loadBestFriends(profileId);
+
+    // 4. stats
+    loadStats(profileId);
+}
+
+function formatDate(isoString) {
+    const d = new Date(isoString);
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const yyyy = d.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+}
+
+let allPosts = [];
+let activeTab = "photos";
+
+async function loadPosts(profileId) {
+    const { data: posts, error } = await supabaseClient
         .from("posts")
-        .select("id, media_url, media_type")
+        .select("id, media_url, media_type, caption, title, created_at")
         .eq("user_id", profileId)
         .order("created_at", { ascending: false });
 
-    if (postsError) {
-        console.error("Failed to load posts:", postsError.message);
+    if (error) {
+        console.error("Failed to load posts:", error.message);
         return;
     }
 
-    const gridEl = document.getElementById("profile-post-grid");
-    const emptyEl = document.getElementById("profile-empty");
-    const emptyText = document.getElementById("profile-empty-text");
-    const mediaPosts = posts.filter(post => post.media_url);
+    allPosts = posts;
+    renderPosts();
+}
 
-    if (mediaPosts.length === 0) {
-        gridEl.style.display = "none";
-        emptyEl.style.display = "flex";
-        emptyText.textContent = isOwnProfile ? "You haven't posted anything yet" : "No posts yet";
-    } else {
-        gridEl.style.display = "grid";
-        emptyEl.style.display = "none";
-        gridEl.innerHTML = mediaPosts
-            .map(post => `<img src="${post.media_url}" alt="" onclick="window.location.href='/dashboard/post/?id=${post.id}'">`)
-            .join("");
+function renderPosts() {
+    const contentEl = document.getElementById("posts-grid-content");
+
+    const filtered = allPosts.filter(post =>
+        activeTab === "photos" ? post.media_type !== "story" : post.media_type === "story"
+    );
+
+    contentEl.classList.toggle("list-mode", activeTab === "text");
+
+    if (filtered.length === 0) {
+        contentEl.innerHTML = `<p class="posts-empty">Nothing here yet.</p>`;
+        return;
     }
+
+    if (activeTab === "photos") {
+        contentEl.innerHTML = filtered.map(post => `
+            <div class="post-card" onclick="window.location.href='/dashboard/post/?id=${post.id}'">
+                <img class="post-thumb" src="${post.media_url}" alt="">
+                <span class="post-caption">${truncate(post.title || post.caption || "", 24)}</span>
+                <span class="post-date">${formatDate(post.created_at)}</span>
+            </div>
+        `).join("");
+    } else {
+        contentEl.innerHTML = filtered.map(post => `
+            <div class="text-post-row" onclick="window.location.href='/dashboard/post/?id=${post.id}'">
+                <span class="text-post-title">${post.title || post.caption || "Untitled"}</span>
+                <span class="text-post-date">${formatDate(post.created_at)}</span>
+            </div>
+        `).join("");
+    }
+}
+
+document.querySelectorAll(".tabs-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        document.querySelector(".tabs-btn.active").classList.remove("active");
+        btn.classList.add("active");
+        activeTab = btn.dataset.tab;
+        renderPosts();
+    });
+});
+
+async function loadBestFriends(profileId) {
+    const { data: following, error: followingError } = await supabaseClient
+        .from("follows")
+        .select("following_id")
+        .eq("follower_id", profileId);
+
+    if (followingError) {
+        console.error("Failed to load following:", followingError.message);
+        return;
+    }
+
+    const followingIds = following.map(row => row.following_id);
+
+    if (followingIds.length === 0) {
+        renderFriendsEmpty();
+        return;
+    }
+
+    const { data: mutuals, error: mutualsError } = await supabaseClient
+        .from("follows")
+        .select("follower_id")
+        .eq("following_id", profileId)
+        .in("follower_id", followingIds)
+        .limit(5);
+
+    if (mutualsError) {
+        console.error("Failed to load mutuals:", mutualsError.message);
+        return;
+    }
+
+    const friendIds = mutuals.map(row => row.follower_id);
+
+    if (friendIds.length === 0) {
+        renderFriendsEmpty();
+        return;
+    }
+
+    const { data: friends } = await supabaseClient
+        .from("users")
+        .select("id, display_name, username, avatar_url")
+        .in("id", friendIds);
+
+    document.getElementById("friends-list").innerHTML = friends.map(friend => `
+        <a href="/profile/?id=${friend.id}" class="friend-item">
+            <img class="friend-avatar" src="${friend.avatar_url || '/assets/pfp.png'}" alt="">
+            <span class="friend-name">${friend.display_name || friend.username}</span>
+        </a>
+    `).join("");
+}
+
+function renderFriendsEmpty() {
+    document.getElementById("friends-list").innerHTML = `
+        <p class="friends-empty">No friends yet.</p>
+    `;
+}
+
+async function getFriendCount(profileId) {
+    const { data: following } = await supabaseClient
+        .from("follows")
+        .select("following_id")
+        .eq("follower_id", profileId);
+
+    const followingIds = (following || []).map(row => row.following_id);
+    if (followingIds.length === 0) return 0;
+
+    const { count } = await supabaseClient
+        .from("follows")
+        .select("follower_id", { count: "exact", head: true })
+        .eq("following_id", profileId)
+        .in("follower_id", followingIds);
+
+    return count || 0;
+}
+
+async function getTotalLikes(profileId) {
+    const { data: userPosts } = await supabaseClient
+        .from("posts")
+        .select("id")
+        .eq("user_id", profileId);
+
+    const postIds = (userPosts || []).map(p => p.id);
+    if (postIds.length === 0) return 0;
+
+    const { count } = await supabaseClient
+        .from("post_likes")
+        .select("post_id", { count: "exact", head: true })
+        .in("post_id", postIds);
+
+    return count || 0;
 }
 
 async function loadStats(profileId) {
@@ -104,88 +211,73 @@ async function loadStats(profileId) {
         .select("id", { count: "exact", head: true })
         .eq("user_id", profileId);
 
-    const { count: followerCount } = await supabaseClient
-        .from("follows")
-        .select("follower_id", { count: "exact", head: true })
-        .eq("following_id", profileId);
+    const friendCount = await getFriendCount(profileId);
+    const likeCount = await getTotalLikes(profileId);
 
-    const { count: followingCount } = await supabaseClient
-        .from("follows")
-        .select("following_id", { count: "exact", head: true })
-        .eq("follower_id", profileId);
-
-    document.getElementById("profile-post-count").textContent = postCount ?? 0;
-    document.getElementById("profile-follower-count").textContent = followerCount ?? 0;
-    document.getElementById("profile-following-count").textContent = followingCount ?? 0;
-    document.getElementById("stat-followers").addEventListener("click", () => openFollowModal(profileId, "followers"));
-    document.getElementById("stat-following").addEventListener("click", () => openFollowModal(profileId, "following"));
+    document.getElementById("stat-posts").textContent = postCount ?? 0;
+    document.getElementById("stat-friends").textContent = friendCount ?? 0;
+    document.getElementById("stat-likes").textContent = likeCount;
 }
 
-const followModal = document.getElementById("follow-modal");
-const followModalTitle = document.getElementById("follow-modal-title");
-const followModalList = document.getElementById("follow-modal-list");
-const followModalClose = document.getElementById("follow-modal-close");
-
-async function openFollowModal(profileId, mode) {
-    followModalTitle.textContent = mode === "followers" ? "Followers" : "Following";
-    followModalList.innerHTML = `<div class="follow-modal-empty">Loading...</div>`;
-    followModal.classList.add("open");
-
-    const column = mode === "followers" ? "following_id" : "follower_id";
-    const idColumn = mode === "followers" ? "follower_id" : "following_id";
-
-    const { data: rows, error } = await supabaseClient
-        .from("follows")
-        .select(idColumn)
-        .eq(column, profileId);
-
-    if (error) {
-        followModalList.innerHTML = `<div class="follow-modal-empty">Failed to load</div>`;
-        return;
-    }
-
-    if (!rows || rows.length === 0) {
-        followModalList.innerHTML = `<div class="follow-modal-empty">${mode === "followers" ? "No followers yet" : "Not following anyone yet"}</div>`;
-        return;
-    }
-
-    const userIds = rows.map(r => r[idColumn]);
-
-    const { data: users, error: usersError } = await supabaseClient
-        .from("users")
-        .select("id, display_name, username, avatar_url")
-        .in("id", userIds);
-
-    if (usersError || !users) {
-        followModalList.innerHTML = `<div class="follow-modal-empty">Failed to load</div>`;
-        return;
-    }
-
-    followModalList.innerHTML = users.map(user => `
-        <a href="/profile/?id=${user.id}" class="search-result-item">
-            <img class="search-result-avatar" src="${user.avatar_url || '/assets/pfp.png'}" alt="">
-            <div class="search-result-name">
-                <span class="search-result-display">${user.display_name || user.username}</span>
-                <span class="search-result-username">@${user.username}</span>
-            </div>
-        </a>
-    `).join("");
+function truncate(text, maxLength) {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength).trim() + "…";
 }
 
-followModalClose.addEventListener("click", () => {
-    followModal.classList.remove("open");
-});
+async function setupFollowButton(currentUserId, profileId) {
+    const followBtn = document.getElementById("profile-follow-btn");
+    followBtn.style.display = "inline-flex";
 
-followModal.addEventListener("click", (e) => {
-    if (e.target === followModal) {
-        followModal.classList.remove("open");
-    }
-});
+    async function getStatus() {
+        const { data: iFollow } = await supabaseClient
+            .from("follows")
+            .select("follower_id")
+            .eq("follower_id", currentUserId)
+            .eq("following_id", profileId)
+            .maybeSingle();
 
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && followModal.classList.contains("open")) {
-        followModal.classList.remove("open");
+        const { data: theyFollow } = await supabaseClient
+            .from("follows")
+            .select("follower_id")
+            .eq("follower_id", profileId)
+            .eq("following_id", currentUserId)
+            .maybeSingle();
+
+        return { iFollow: !!iFollow, theyFollow: !!theyFollow };
     }
-});
+
+    function renderLabel(status) {
+        if (status.iFollow && status.theyFollow) {
+            followBtn.textContent = "Friends";
+        } else if (status.iFollow) {
+            followBtn.textContent = "Following";
+        } else {
+            followBtn.textContent = "Follow";
+        }
+    }
+
+    let status = await getStatus();
+    renderLabel(status);
+
+    followBtn.addEventListener("click", async () => {
+        if (status.iFollow) {
+            // unfollow
+            await supabaseClient
+                .from("follows")
+                .delete()
+                .eq("follower_id", currentUserId)
+                .eq("following_id", profileId);
+        } else {
+            // follow
+            await supabaseClient
+                .from("follows")
+                .insert([{ follower_id: currentUserId, following_id: profileId }]);
+        }
+
+        status = await getStatus();
+        renderLabel(status);
+        loadStats(profileId); // refresh friend count in case mutual status changed
+    });
+}
 
 loadProfile();
