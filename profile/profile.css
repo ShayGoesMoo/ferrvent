@@ -12,8 +12,8 @@
     --text-muted: #a29eab;
 
     /* borders */
-    --border-default: #383440;
-    --border-elevated: #48434f;
+    --border-default: #2b2831;
+    --border-elevated: #37343b;
 
     /* THE accent — vivid violet */
     --accent: #b464d9;
@@ -117,7 +117,8 @@ body {
 }
 
 .profile-blog {
-    font-weight: 900;
+    font-weight: 500;
+    font-family: inherit;
 }
 
 
@@ -389,7 +390,7 @@ body {
     color: var(--text-primary);
     text-decoration: none;
     font-size: 0.9em;
-    font-weight: 700;
+    font-weight: 500;
     padding: 6px 12px;
     border: 1px solid var(--border-elevated);
     border-radius: 6px;
@@ -450,7 +451,7 @@ body {
     color: var(--text-primary);
     margin: 0;
     font-size: 1.2em;
-    font-weight: 700;
+    font-weight: 500;
 }
 
 .profile-username {
@@ -462,7 +463,7 @@ body {
 .profile-bio {
     color: var(--text-primary);
     margin: 0;
-    font-weight: 0.7em;
+    font-weight: 500;
 }
 
 .profile-joindate {
@@ -604,7 +605,7 @@ body {
 
 .tabs-btn.active {
     color: var(--accent);
-    font-weight: 700;
+    font-weight: 500;
 }
 
 .posts-grid-content {
@@ -656,7 +657,7 @@ body {
 
 .text-post-title {
     color: var(--text-primary);
-    font-weight: 600;
+    font-weight: 500;
     font-size: 1em;
     margin-bottom: 4px;
 }
@@ -705,7 +706,7 @@ body {
 }
 
 .stat-number {
-    font-weight: 700;
+    font-weight: 500;
     color: var(--accent);
 }
 

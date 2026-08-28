@@ -24,7 +24,7 @@ async function loadProfile() {
     }
 
     document.getElementById("profile-avatar").src = profileUser.avatar_url || "/assets/pfp.png";
-    document.getElementById("site-banner-img").src = profileUser.banner_url || "/assets/bnr.png";
+    document.getElementById("site-banner-img").src = profileUser.banner_url || "/assets/remi.png";
     document.getElementById("profile-display-name").textContent = profileUser.display_name || profileUser.username;
     document.getElementById("profile-username").textContent = `@${profileUser.username}`;
     document.getElementById("profile-bio").textContent = profileUser.bio || "No bio yet.";
@@ -41,7 +41,6 @@ async function loadProfile() {
     loadPosts(profileId);
 
     // 3. best friends
-    loadBestFriends(profileId);
 
     // 4. stats
     loadStats(profileId);
