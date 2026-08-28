@@ -14,7 +14,7 @@ async function loadProfile() {
     // 1. profile info
     const { data: profileUser, error: userError } = await supabaseClient
         .from("users")
-        .select("id, display_name, username, avatar_url, banner_url, bio, created_at")
+        .select("id, display_name, username, avatar_url, banner_url, bio, created_at, interests")
         .eq("id", profileId)
         .single();
 
@@ -24,11 +24,12 @@ async function loadProfile() {
     }
 
     document.getElementById("profile-avatar").src = profileUser.avatar_url || "/assets/pfp.png";
-    document.getElementById("header-img").src = profileUser.banner_url || "/assets/bnr.png";
+    document.getElementById("site-banner-img").src = profileUser.banner_url || "/assets/bnr.png";
     document.getElementById("profile-display-name").textContent = profileUser.display_name || profileUser.username;
     document.getElementById("profile-username").textContent = `@${profileUser.username}`;
     document.getElementById("profile-bio").textContent = profileUser.bio || "No bio yet.";
     document.getElementById("profile-joindate").textContent = `Member since ${formatDate(profileUser.created_at)}`;
+    renderInterestTags(profileUser.interests);
 
     if (isOwnProfile) {
         document.getElementById("profile-edit-btn").style.display = "inline-flex";
@@ -155,17 +156,14 @@ async function loadBestFriends(profileId) {
         .in("id", friendIds);
 
     document.getElementById("friends-list").innerHTML = friends.map(friend => `
-        <a href="/profile/?id=${friend.id}" class="friend-item">
-            <img class="friend-avatar" src="${friend.avatar_url || '/assets/pfp.png'}" alt="">
-            <span class="friend-name">${friend.display_name || friend.username}</span>
+        <a href="/profile/?id=${friend.id}" class="friend-bubble" title="${friend.display_name || friend.username}">
+            <img class="friend-bubble-avatar" src="${friend.avatar_url || '/assets/pfp.png'}" alt="">
         </a>
     `).join("");
 }
 
 function renderFriendsEmpty() {
-    document.getElementById("friends-list").innerHTML = `
-        <p class="friends-empty">No friends yet.</p>
-    `;
+    document.getElementById("friends-list").innerHTML = `<p class="friends-empty">No friends yet.</p>`;
 }
 
 async function getFriendCount(profileId) {
@@ -210,10 +208,12 @@ async function loadStats(profileId) {
         .eq("user_id", profileId);
 
     const friendCount = await getFriendCount(profileId);
+    const followingCount = await getFollowingCount(profileId);
     const likeCount = await getTotalLikes(profileId);
 
     document.getElementById("stat-posts").textContent = postCount ?? 0;
     document.getElementById("stat-friends").textContent = friendCount ?? 0;
+    document.getElementById("stat-following").textContent = followingCount ?? 0;
     document.getElementById("stat-likes").textContent = likeCount;
 }
 
@@ -276,6 +276,28 @@ async function setupFollowButton(currentUserId, profileId) {
         renderLabel(status);
         loadStats(profileId); // refresh friend count in case mutual status changed
     });
+}
+
+function renderInterestTags(interests) {
+    const container = document.getElementById("interest-tags");
+
+    if (!interests || interests.length === 0) {
+        container.innerHTML = "";
+        return;
+    }
+
+    container.innerHTML = interests.map(tag => `
+        <span class="interest-tag">#${tag}</span>
+    `).join("");
+}
+
+async function getFollowingCount(profileId) {
+    const { count } = await supabaseClient
+        .from("follows")
+        .select("follower_id", { count: "exact", head: true })
+        .eq("follower_id", profileId);
+
+    return count || 0;
 }
 
 loadProfile();

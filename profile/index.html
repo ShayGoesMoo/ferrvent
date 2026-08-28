@@ -18,7 +18,7 @@
     <body>
         <div class="page-wrapper">
             <div class="site-banner">
-                <img class="site-banner-img" src="/assets/bnr.png" alt="Ferrvent">
+                <img class="site-banner-img" id="site-banner-img" src="/assets/site-banner.jpg" alt="Ferrvent">
                 <div class="grain-overlay"></div>
             </div>
 
@@ -72,55 +72,44 @@
 
             <div class="main-thing">
                 <div class="profile-box">
-                    <div class="header-img-placeholder">
-                        <img class="header-img" id="header-img" src="" alt="">
-                        <div class="header-bar">
-                            <a href="" id="profile-edit-btn" class="edit-link" style="display:none;">
-                                <span>Edit Profile</span>
-                            </a>
-                            <button id="profile-follow-btn" class="edit-link" style="display:none;">Follow</button>
+                    <div class="profile-header">
+                        <img id="profile-avatar" class="profile-pic-header" src="" alt="">
+
+                        <div class="profile-header-info">
+                            <div class="profile-header-top">
+                                <div class="profile-header-names">
+                                    <h2 id="profile-display-name" class="profile-display-name"></h2>
+                                    <p id="profile-username" class="profile-username"></p>
+                                </div>
+
+                                <div class="profile-header-actions">
+                                    <a href="" id="profile-edit-btn" class="edit-link" style="display:none;">
+                                        <span>Edit Profile</span>
+                                    </a>
+                                    <button id="profile-follow-btn" class="edit-link" style="display:none;"></button>
+                                </div>
+                            </div>
+
+                            <div class="profile-stats-row">
+                                <span class="stat"><span id="stat-likes" class="stat-number">0</span> Likes</span>
+                                <span class="stat"><span id="stat-friends" class="stat-number">0</span> Friends</span>
+                                <span class="stat"><span id="stat-following" class="stat-number">0</span> Following</span>
+                                <span class="stat"><span id="stat-posts" class="stat-number">0</span> Posts</span>
+                            </div>
+
+                            <p id="profile-bio" class="profile-bio"></p>
+                            <p id="profile-joindate" class="profile-joindate"></p>
+
+                            <div id="interest-tags" class="interest-tags"></div>
                         </div>
                     </div>
 
-                    <div class="three-column">
-                        <div class="left">
-                            <div class="profile-info">
-                                <img id="profile-avatar" class="profile-pic" src="" alt="">
-                                <p id="profile-display-name" class="profile-display-name"></p>
-                                <p id="profile-username" class="profile-username"></p>
-                                <p id="profile-bio" class="profile-bio"></p>
-                            </div> 
-
-                            <div class="activity-box">
-                                <h3>Activity</h3>
-                                <div class="stats-list">
-                                    <p class="stat"><span id="stat-likes" class="stat-number">0</span> Likes</p>
-                                    <p class="stat"><span id="stat-friends" class="stat-number">0</span> Friends</p>
-                                    <p class="stat"><span id="stat-posts" class="stat-number">0</span> Posts</p>
-                                </div>
-                            </div>
-
-                            <div class="best-friends">
-                                <h3>Friends</h3>
-                                <div id="friends-list" class="friends-list">
-                                </div>
-                            </div>                        
+                    <div class="posts-box">
+                        <div class="posts-tabs" id="posts-grid-container">
+                            <button class="tabs-btn active" data-tab="photos">Photos</button>
+                            <button class="tabs-btn" data-tab="text">Text Posts</button>
                         </div>
-
-                        <div class="middle">
-                            <div class="posts-box">
-                                <div class="posts-tabs" id="posts-grid-container">
-                                    <button class="tabs-btn active" data-tab="photos">Photos</button>
-                                    <button class="tabs-btn" data-tab="text">Text Posts</button>
-                                </div>
-
-                                <div class="posts-grid-content" id="posts-grid-content"></div>
-                            </div>
-                        </div>
-
-                        <div class="right">
-                            
-                        </div>
+                        <div class="posts-grid-content" id="posts-grid-content"></div>
                     </div>
                 </div>
             </div>
