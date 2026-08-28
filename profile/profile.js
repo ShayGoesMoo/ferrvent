@@ -91,8 +91,6 @@ function renderPosts() {
         contentEl.innerHTML = filtered.map(post => `
             <div class="post-card" onclick="window.location.href='/dashboard/post/?id=${post.id}'">
                 <img class="post-thumb" src="${post.media_url}" alt="">
-                <span class="post-caption">${truncate(post.title || post.caption || "", 24)}</span>
-                <span class="post-date">${formatDate(post.created_at)}</span>
             </div>
         `).join("");
     } else {

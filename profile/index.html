@@ -16,119 +16,126 @@
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
     </head>
     <body>
-        <div class="nav-bar">
-            <div class="search-wrapper">
-                <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M11.5 11.5L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-
-                <input type="text" id="search-input" class="search-input" placeholder="Search users or posts...">
-
-                <button class="search-clear" id="search-clear" style="display:none;" aria-label="Clear search">
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-                </button>
-
-                <div class="search-suggestions" id="search-suggestions"></div>
+        <div class="page-wrapper">
+            <div class="site-banner">
+                <img class="site-banner-img" src="/assets/bnr.png" alt="Ferrvent">
+                <div class="grain-overlay"></div>
             </div>
 
-            <nav class="nav-links">
-                <a href="../dashboard/">
-                    <span>Home</span>
-                </a>
-                <p>|</p>
-                <a href="../mail/">
-                    <span>Mail</span>
-                </a>
-                <p>|</p>
-                <div class="profile-dropdown">
-                    <button class="profile-trigger">
-                        <span class="profile-name">Guest</span>
-                        <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <div class="nav-bar">
+                <div class="search-wrapper">
+                    <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M11.5 11.5L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+
+                    <input type="text" id="search-input" class="search-input" placeholder="Search users or posts...">
+
+                    <button class="search-clear" id="search-clear" style="display:none;" aria-label="Clear search">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                         </svg>
                     </button>
 
-                    <div class="dropdown-menu">
-                        <a href="../profile/" class="dropdown-item">
-                            <img class="profile-avatar" src="/assets/pfp.png" alt="">
-                            <span class="profile-blog">Guest's Blog</span>
-                        </a>
-                        <a href="../auth/" class="dropdown-item" id="auth-link">
-                            <span id="auth-link-text">Log out</span>
-                        </a>
-                    </div>
-                </div>
-            </nav>
-        </div>
-
-        <div class="main-thing">
-            <div class="profile-box">
-                <div class="header-img-placeholder">
-                    <img class="header-img" id="header-img" src="" alt="">
-                    <div class="header-bar">
-                        <a href="" id="profile-edit-btn" class="edit-link" style="display:none;">
-                            <span>Edit Profile</span>
-                        </a>
-                        <button id="profile-follow-btn" class="edit-link" style="display:none;">Follow</button>
-                    </div>
+                    <div class="search-suggestions" id="search-suggestions"></div>
                 </div>
 
-                <div class="three-column">
-                    <div class="left">
+                <nav class="nav-links">
+                    <a href="../dashboard/">
+                        <span>Home</span>
+                    </a>
+                    <p>|</p>
+                    <a href="../mail/">
+                        <span>Mail</span>
+                    </a>
+                    <p>|</p>
+                    <div class="profile-dropdown">
+                        <button class="profile-trigger">
+                            <span class="profile-name">Guest</span>
+                            <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <div class="profile-info">
-                            <img id="profile-avatar" class="profile-pic" src="" alt="">
-                            <p id="profile-display-name" class="profile-display-name"></p>
-                            <p id="profile-username" class="profile-username"></p>
-                            <p id="profile-bio" class="profile-bio"></p>
-                        </div>                  
+                        <div class="dropdown-menu">
+                            <a href="../profile/" class="dropdown-item">
+                                <img class="profile-avatar" src="/assets/pfp.png" alt="">
+                                <span class="profile-blog">Guest's Blog</span>
+                            </a>
+                            <a href="../auth/" class="dropdown-item" id="auth-link">
+                                <span id="auth-link-text">Log out</span>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
 
+            <div class="main-thing">
+                <div class="profile-box">
+                    <div class="header-img-placeholder">
+                        <img class="header-img" id="header-img" src="" alt="">
+                        <div class="header-bar">
+                            <a href="" id="profile-edit-btn" class="edit-link" style="display:none;">
+                                <span>Edit Profile</span>
+                            </a>
+                            <button id="profile-follow-btn" class="edit-link" style="display:none;">Follow</button>
+                        </div>
+                    </div>
+
+                    <div class="three-column">
+                        <div class="left">
+                            <div class="profile-info">
+                                <img id="profile-avatar" class="profile-pic" src="" alt="">
+                                <p id="profile-display-name" class="profile-display-name"></p>
+                                <p id="profile-username" class="profile-username"></p>
+                                <p id="profile-bio" class="profile-bio"></p>
+                            </div> 
+
+                            <div class="activity-box">
+                                <h3>Activity</h3>
+                                <div class="stats-list">
+                                    <p class="stat"><span id="stat-likes" class="stat-number">0</span> Likes</p>
+                                    <p class="stat"><span id="stat-friends" class="stat-number">0</span> Friends</p>
+                                    <p class="stat"><span id="stat-posts" class="stat-number">0</span> Posts</p>
+                                </div>
+                            </div>
+
+                            <div class="best-friends">
+                                <h3>Friends</h3>
+                                <div id="friends-list" class="friends-list">
+                                </div>
+                            </div>                        
+                        </div>
+
+                        <div class="middle">
+                            <div class="posts-box">
+                                <div class="posts-tabs" id="posts-grid-container">
+                                    <button class="tabs-btn active" data-tab="photos">Photos</button>
+                                    <button class="tabs-btn" data-tab="text">Text Posts</button>
+                                </div>
+
+                                <div class="posts-grid-content" id="posts-grid-content"></div>
+                            </div>
+                        </div>
+
+                        <div class="right">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="bottom">
+                <div class="footer-bar">
+                    <p id="profile-joindate" class="profile-joindate"></p>
+
+                    <a href="" class="footer-link">
                         
-                    </div>
-
-                    <div class="middle">
-                        <div class="posts-box">
-                            <div class="posts-tabs" id="posts-grid-container">
-                                <button class="tabs-btn active" data-tab="photos">Photos</button>
-                                <button class="tabs-btn" data-tab="text">Text Posts</button>
-                            </div>
-
-                            <div class="posts-grid-content" id="posts-grid-content"></div>
-                        </div>
-                    </div>
-
-                    <div class="right">
-                        <div class="activity-box">
-                            <h3>Activity</h3>
-                            <div class="stats-list">
-                                <p class="stat"><span id="stat-likes" class="stat-number">0</span> Likes</p>
-                                <p class="stat"><span id="stat-friends" class="stat-number">0</span> Friends</p>
-                                <p class="stat"><span id="stat-posts" class="stat-number">0</span> Posts</p>
-                            </div>
-                        </div>
-
-                        <div class="best-friends">
-                            <h3>Friends</h3>
-                            <div id="friends-list" class="friends-list">
-                            </div>
-                        </div>
-                    </div>
+                    </a>
                 </div>
-            </div>
+            </footer>
         </div>
-
-        <footer class="bottom">
-            <div class="footer-bar">
-                <p id="profile-joindate" class="profile-joindate"></p>
-
-                <a href="" class="footer-link">
-                    
-                </a>
-            </div>
-        </footer>
+        
 
         <script>
             const trigger = document.querySelector('.profile-trigger');
