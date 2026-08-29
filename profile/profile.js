@@ -39,7 +39,7 @@ async function loadProfile() {
     bannerImg.onload = () => bannerWrapper.classList.remove("banner-loading");
 
     document.getElementById("profile-avatar").src = profileUser.avatar_url || "/assets/pfp.png";
-    document.getElementById("site-banner-img").src = "/assets/remi.png";
+    document.getElementById("site-banner-img").src = "/assets/1.png";
     document.getElementById("profile-display-name").textContent = profileUser.display_name || profileUser.username;
     document.getElementById("profile-username").textContent = `@${profileUser.username}`;
     document.getElementById("profile-bio").textContent = profileUser.bio || "No bio yet.";

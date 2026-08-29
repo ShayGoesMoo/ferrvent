@@ -16,7 +16,7 @@ document.addEventListener('click', () => {
 // Default site banner (falls back to the site's own image on every page)
 const siteBannerImg = document.getElementById('site-banner-img');
 if (siteBannerImg && !siteBannerImg.getAttribute('src')) {
-    siteBannerImg.src = '/assets/remi.png';
+    siteBannerImg.src = '/assets/1.png';
 }
 
 async function loadNavAvatar() {
