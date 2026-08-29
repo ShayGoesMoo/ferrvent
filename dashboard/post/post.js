@@ -26,21 +26,7 @@ async function loadPost() {
         .single();
 
     if (error || !post) {
-        commentPanel.innerHTML = `
-            <div class="comment-panel-header">
-                <span>Comments</span>
-                <button type="button" class="comment-panel-close" aria-label="Close">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 6 6 18M6 6l12 12"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="comment-panel-list"></div>
-            <form class="comment-panel-form">
-                <input type="text" placeholder="Add a comment..." autocomplete="off">
-                <button type="submit">Post</button>
-            </form>
-        `;
+        container.innerHTML = `<div class="empty-state"><div class="empty-title">Post not found</div></div>`;
         return;
     }
 
@@ -57,10 +43,10 @@ async function loadPost() {
     timelineItem.innerHTML = `
             <div class="item-info">
                 <div class="item-header">
-                    <a href="/profile/?id=${post.user_id}"><img class="item-avatar" src="${avatarSrc}" alt=""></a>
+                    <a href="/profile/?user=${post.users.username}"><img class="item-avatar" src="${avatarSrc}" alt=""></a>
                     <div class="item-header-text">
                         <span class="item-username">
-                            <a href="/profile/?id=${post.user_id}">${post.users.display_name || post.users.username}</a>
+                            <a href="/profile/?user=${post.users.username}">${post.users.display_name || post.users.username}</a>
                         </span>
                         <span class="item-date">${uploadedText}${editedText}</span>
                     </div>
@@ -143,6 +129,9 @@ async function loadPost() {
     loadComments(post.id, timelineItem, commentPanel);
     allowShare(post.id, timelineItem);
     if (isOwner) postVisibility(timelineItem);
+    if (!isOwner) {
+        supabaseClient.rpc("increment_view_count", { target_post_id: post.id });
+    }
 }
 
 // fetch the likes
@@ -311,7 +300,7 @@ async function loadComments(postId, timelineItem, commentPanel) {
             <img class="comment-avatar" src="${avatarSrc}" alt="">
             <div class="comment-body">
                 <div class="comment-header">
-                    <a href="/profile/?id=${comment.user_id}" class="comment-username-link">${comment.users.username}</a>
+                    <a href="/profile/?user=${comment.users.username}" class="comment-username-link">${comment.users.username}</a>
                     <span class="comment-timestamp">${timeText}${editedTag}</span>
                 </div>
                 <div class="comment-text-display">${comment.comment_text || ""}</div>

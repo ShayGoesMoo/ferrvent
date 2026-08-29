@@ -157,8 +157,8 @@ document.getElementById("cancel-btn").addEventListener("click", () => {
     window.location.href = "../dashboard/";
 });
 
-const tabBtns = document.querySelectorAll(".post-type-tabs .tab-btn");
-const panels = document.querySelectorAll(".tab-panel");
+const tabBtns = document.querySelectorAll(".settings-sidebar .settings-tab");
+const panels = document.querySelectorAll(".settings-panel");
 let activePostType = "post";
 
 tabBtns.forEach(btn => {
@@ -166,11 +166,11 @@ tabBtns.forEach(btn => {
         tabBtns.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
 
-        const tab = btn.dataset.tab;
+        const tab = btn.dataset.panel;
         activePostType = tab;
 
         panels.forEach(panel => {
-            panel.style.display = panel.dataset.panel === tab ? "block" : "none";
+            panel.classList.toggle("active", panel.id === `panel-${tab}`);
         });
     });
 });

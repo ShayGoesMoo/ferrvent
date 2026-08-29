@@ -18,30 +18,34 @@ document.getElementById("register-form").addEventListener("submit", async (e) =>
     e.preventDefault();
     const registerForm = document.getElementById("register-form");
     registerUser(registerForm);
-})
+});
+
+async function resolveLoginEmail(identifier) {
+    // if it already looks like an email, just use it directly
+    if (identifier.includes("@")) {
+        return identifier;
+    }
+
+    const { data, error } = await supabaseClient.rpc("get_email_for_login", { identifier });
+
+    if (error || !data) {
+        return null; // username not found
+    }
+
+    return data;
+}
 
 async function loginUser(loginForm) {
     const identifier = document.getElementById("identifier").value.trim();
     const password = document.getElementById("password").value;
-    let email = identifier;
 
-    // if it doesn't look like an email, treat it as a username and fetch the corresponding email from the database
-    if (!identifier.includes("@")) {
-        const { data: userRow, error: lookupError } = await supabaseClient
-            .from("public_lookup")
-            .select("email_address")
-            .eq("username", identifier)
-            .single();
-        
-        if (lookupError || !userRow) {
-            alert("No account found with that username.");
-            return;
-        }
+    const email = await resolveLoginEmail(identifier);
 
-        email = userRow.email_address;
+    if (!email) {
+        alert("No account found with that username.");
+        return;
     }
 
-    // sign in with whichever email we resolved
     const { data, error } = await supabaseClient.auth.signInWithPassword({
         email: email,
         password: password,
@@ -56,20 +60,19 @@ async function loginUser(loginForm) {
 }
 
 async function registerUser(registerForm) {
-    // --- Step 1: run all format validations ---
+    // --- unchanged, keep exactly as-is ---
     const usernameValid = validateUsername();
     const passwordValid = validatePassword();
     const confirmValid = validateConfirmPassword();
 
     if (!usernameValid || !passwordValid || !confirmValid) {
-        return; // hints are already showing the specific problem, nothing more to do
+        return;
     }
 
     const username = usernameInput.value;
     const email = emailInput.value.trim();
     const password = passwordInput.value;
 
-    // --- Step 2: final authoritative availability check right before signup ---
     const { data: existingUsername } = await supabaseClient
         .from("users")
         .select("username")
@@ -92,7 +95,6 @@ async function registerUser(registerForm) {
         return;
     }
 
-    // --- Step 3: create the auth user ---
     const { data, error } = await supabaseClient.auth.signUp({
         email: email,
         password: password,
@@ -100,14 +102,13 @@ async function registerUser(registerForm) {
 
     if (error) {
         if (error.message.includes("already registered") || error.status === 422) {
-            alert("This email is already registered. Please log in or use a different email.", "error");
+            alert("This email is already registered. Please log in or use a different email.");
         } else {
-            alert("Error creating account: " + error.message, "error");
+            alert("Error creating account: " + error.message);
         }
         return;
     }
 
-    // --- Step 4: insert the user into the users table ---
     const { error: insertError } = await supabaseClient.from("users").insert([
         {
             id: data.user.id,
@@ -117,7 +118,7 @@ async function registerUser(registerForm) {
     ]);
 
     if (insertError) {
-        alert("Account created, but user save failed: " + insertError.message, "error");
+        alert("Account created, but user save failed: " + insertError.message);
         return;
     }
 

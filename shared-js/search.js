@@ -14,7 +14,7 @@ searchInput.addEventListener("input", () => {
         return;
     }
 
-    searchTimeout = setTimeout(() => runSearch(query), 250);
+    searchTimeout = setTimeout(() => runSearch(query), 10);
 });
 
 searchClear.addEventListener("click", () => {
@@ -41,6 +41,7 @@ async function runSearch(query) {
     const users = (userResults.data || []).map(user => ({
         type: "user",
         id: user.id,
+        username: user.username, // add this if it's not already there
         label: user.display_name || user.username,
         sublabel: `@${user.username}`,
         image: user.avatar_url || "/assets/pfp.png"
@@ -67,7 +68,7 @@ function renderSuggestions(results) {
 
     suggestionsEl.innerHTML = results.map(item => {
         const href = item.type === "user"
-            ? `/profile/?id=${item.id}`
+            ? `/profile/?user=${item.username}`
             : `/dashboard/post/?id=${item.id}`;
 
         const imageHtml = item.type === "user"

@@ -49,3 +49,68 @@
     font-size: 13px;
     color: #888;
 }
+
+/* generic small inline spinner, reuses your existing spinner animation */
+.inline-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border-default);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* avatar loading overlay */
+.avatar-loading {
+    position: relative;
+}
+
+.avatar-loading::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--bg-elevated);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* posts box loading state — sized to roughly 2 rows */
+.posts-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 340px; /* ~2 rows of square thumbnails + gaps */
+    color: var(--text-muted);
+    font-size: 0.85em;
+}
+
+.site-banner {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 6 / 1;
+    overflow: hidden;
+    border-bottom: 2px solid var(--accent-bold);
+    background: var(--bg-elevated); /* shows while image is loading/before src is set */
+}
+
+.banner-loading::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 24px;
+    height: 24px;
+    margin: auto;
+    border: 3px solid var(--border-default);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}

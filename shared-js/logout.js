@@ -8,6 +8,7 @@ async function updateAuthButton() {
         authLink.href = "#";
         authLink.onclick = (e) => {
             e.preventDefault();
+            authLinkText.textContent = "Logging out...";
             handleLogout();
         };
     } else {

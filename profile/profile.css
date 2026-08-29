@@ -74,8 +74,48 @@ body {
     color: inherit;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     text-decoration: none;
+}
+
+.nav-links a svg {
+    color: var(--text-muted);
+    transition: color 0.15s ease;
+}
+
+.nav-links a:hover svg,
+.nav-links a:hover span {
+    color: var(--accent);
+}
+
+.nav-divider {
+    color: var(--border-elevated); /* much lighter than default text, per your request */
+    margin: 0;
+    user-select: none;
+}
+
+.dropdown-item svg {
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.dropdown-item:hover svg {
+    color: var(--text-primary);
+}
+
+.profile-trigger svg:not(.dropdown-arrow) {
+    color: var(--text-muted);
+    transition: color 0.15s ease;
+}
+
+.profile-trigger:hover svg:not(.dropdown-arrow) {
+    color: var(--accent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .profile-dropdown:hover .dropdown-menu {
+        display: flex;
+    }
 }
 
 .nav-links a:hover,
@@ -255,7 +295,7 @@ body {
 
 .dropdown-menu {
     position: absolute;
-    top: calc(100% + 10px);
+    top: 100%;
     right: 0;
     min-width: 180px;
     background: var(--bg-elevated);

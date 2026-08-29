@@ -13,7 +13,7 @@ async function init() {
 
     const { data: userRow, error } = await supabaseClient
         .from("users")
-        .select("display_name, username, bio, avatar_url, banner_url, interests")
+        .select("display_name, username, bio, avatar_url, interests")
         .eq("id", currentUser.id)
         .single();
 
@@ -29,9 +29,6 @@ async function init() {
 
     if (userRow.avatar_url) {
         document.getElementById("current-avatar").src = userRow.avatar_url;
-    }
-    if (userRow.banner_url) {
-        document.getElementById("current-banner").src = userRow.banner_url;
     }
 
     selectedInterests = userRow.interests || [];
@@ -83,6 +80,27 @@ document.querySelectorAll(".settings-tab").forEach(tab => {
         document.getElementById(`panel-${tab.dataset.panel}`).classList.add("active");
     });
 });
+
+function activateTab(panelName) {
+    const targetTab = document.querySelector(`.settings-tab[data-panel="${panelName}"]`);
+    const targetPanel = document.getElementById(`panel-${panelName}`);
+
+    if (!targetTab || !targetPanel) return;
+
+    document.querySelector(".settings-tab.active")?.classList.remove("active");
+    targetTab.classList.add("active");
+
+    document.querySelector(".settings-panel.active")?.classList.remove("active");
+    targetPanel.classList.add("active");
+}
+
+// on page load, check the URL for a requested tab
+const params = new URLSearchParams(window.location.search);
+const requestedTab = params.get("tab");
+
+if (requestedTab) {
+    activateTab(requestedTab);
+}
 
 
 /* ============================

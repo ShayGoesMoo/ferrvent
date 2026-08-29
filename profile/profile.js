@@ -8,22 +8,38 @@ async function loadProfile() {
     }
 
     const currentUserId = session.user.id;
-    const profileId = params.get("id") || currentUserId;
-    const isOwnProfile = profileId === currentUserId;
+    const usernameParam = params.get("user");
 
-    const { data: profileUser, error: userError } = await supabaseClient
+    let profileQuery = supabaseClient
         .from("users")
-        .select("id, display_name, username, avatar_url, banner_url, bio, created_at, interests")
-        .eq("id", profileId)
-        .single();
+        .select("id, display_name, username, avatar_url, bio, created_at, interests");
+
+    if (usernameParam) {
+        profileQuery = profileQuery.eq("username", usernameParam);
+    } else {
+        profileQuery = profileQuery.eq("id", currentUserId);
+    }
+
+    const { data: profileUser, error: userError } = await profileQuery.single();
 
     if (userError || !profileUser) {
         console.error("Failed to load profile:", userError?.message);
         return;
     }
 
+    const profileId = profileUser.id; // real uuid, used for every query below
+    const isOwnProfile = profileId === currentUserId;
+
+    const avatarImg = document.getElementById("profile-avatar");
+    const avatarWrapper = document.getElementById("avatar-wrapper");
+    avatarImg.onload = () => avatarWrapper.classList.remove("avatar-loading");
+    avatarImg.src = profileUser.avatar_url || "/assets/pfp.png";
+    const bannerImg = document.getElementById("site-banner-img");
+    const bannerWrapper = document.getElementById("site-banner-wrapper");
+    bannerImg.onload = () => bannerWrapper.classList.remove("banner-loading");
+
     document.getElementById("profile-avatar").src = profileUser.avatar_url || "/assets/pfp.png";
-    document.getElementById("site-banner-img").src = profileUser.banner_url || "/assets/remi.png"; // overrides nav-bar.js's default with this profile's own banner
+    document.getElementById("site-banner-img").src = "/assets/remi.png";
     document.getElementById("profile-display-name").textContent = profileUser.display_name || profileUser.username;
     document.getElementById("profile-username").textContent = `@${profileUser.username}`;
     document.getElementById("profile-bio").textContent = profileUser.bio || "No bio yet.";
@@ -52,6 +68,14 @@ let allPosts = [];
 let activeTab = "photos";
 
 async function loadPosts(profileId) {
+    const contentEl = document.getElementById("posts-grid-content");
+    contentEl.innerHTML = `
+        <div class="posts-loading">
+            <span class="inline-spinner"></span>
+            Loading content...
+        </div>
+    `;
+
     const { data: posts, error } = await supabaseClient
         .from("posts")
         .select("id, media_url, media_type, caption, title, created_at")
@@ -60,6 +84,7 @@ async function loadPosts(profileId) {
 
     if (error) {
         console.error("Failed to load posts:", error.message);
+        contentEl.innerHTML = `<p class="posts-empty">Couldn't load posts.</p>`;
         return;
     }
 
@@ -142,19 +167,19 @@ async function getTotalLikes(profileId) {
 }
 
 async function loadStats(profileId) {
-    const { count: postCount } = await supabaseClient
-        .from("posts")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", profileId);
+    const [postCountResult, friendCount, followingCount, likeCount] = await Promise.all([
+        supabaseClient
+            .from("posts")
+            .select("id", { count: "exact", head: true })
+            .eq("user_id", profileId),
+        getFriendCount(profileId),
+        getFollowingCount(profileId),
+        getTotalLikes(profileId)
+    ]);
 
-    const friendCount = await getFriendCount(profileId);
-    const followingCount = await getFollowingCount(profileId);
-    const likeCount = await getTotalLikes(profileId);
-
-    document.getElementById("stat-posts").textContent = postCount ?? 0;
+    document.getElementById("stat-posts").textContent = postCountResult.count ?? 0;
     document.getElementById("stat-friends").textContent = friendCount ?? 0;
     document.getElementById("stat-following").textContent = followingCount ?? 0;
-    document.getElementById("stat-likes").textContent = likeCount;
 }
 
 function truncate(text, maxLength) {
@@ -165,6 +190,7 @@ function truncate(text, maxLength) {
 async function setupFollowButton(currentUserId, profileId) {
     const followBtn = document.getElementById("profile-follow-btn");
     followBtn.style.display = "inline-flex";
+    followBtn.innerHTML = `<span class="inline-spinner"></span>`;
 
     async function getStatus() {
         const { data: iFollow } = await supabaseClient
@@ -227,7 +253,7 @@ function renderInterestTags(interests) {
     }
 
     container.innerHTML = interests.map(tag => `
-        <span class="interest-tag">#${tag}</span>
+        <span class="interest-tag">${tag}</span>
     `).join("");
 }
 
@@ -239,5 +265,25 @@ async function getFollowingCount(profileId) {
 
     return count || 0;
 }
+
+document.getElementById("profile-share-btn").addEventListener("click", async () => {
+    const url = window.location.href;
+
+    if (navigator.share) {
+        try {
+            await navigator.share({ url });
+        } catch (err) {
+            // user cancelled — not an error
+        }
+        return;
+    }
+
+    try {
+        await navigator.clipboard.writeText(url);
+        showToast("Profile link copied to clipboard", "success");
+    } catch (err) {
+        showToast("Couldn't copy link", "error");
+    }
+});
 
 loadProfile();

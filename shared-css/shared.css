@@ -24,12 +24,12 @@ body {
     --bg-elevated: #111111;
 
     /* text */
-    --text-primary: #e4d7c4;
-    --text-muted: #c2b9ac;
+    --text-primary: #f1eee8;
+    --text-muted: #c9c4bd;
 
     /* borders */
-    --border-default: #2b2831;
-    --border-elevated: #37343b;
+    --border-default: #18171b;
+    --border-elevated: #262427;
 
     /* THE accent — vivid violet */
     --accent: #be2631;

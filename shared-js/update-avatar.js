@@ -26,8 +26,10 @@ async function updateAvatar() {
     }
 
     if (profileName) {
-        profileName.textContent = "Hello, " + userRow.display_name + "!" || "Guest";
-        profileBlog.textContent = "@" + userRow.username|| "Guest";
+        profileName.textContent = userRow
+            ? `${userRow.display_name || userRow.username}`
+            : "Guest";
+        profileBlog.textContent = "@" + userRow.username || "Guest";
     }
 }
 
