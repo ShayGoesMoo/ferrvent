@@ -11,7 +11,6 @@ async function loadProfile() {
     const profileId = params.get("id") || currentUserId;
     const isOwnProfile = profileId === currentUserId;
 
-    // 1. profile info
     const { data: profileUser, error: userError } = await supabaseClient
         .from("users")
         .select("id, display_name, username, avatar_url, banner_url, bio, created_at, interests")
@@ -24,7 +23,7 @@ async function loadProfile() {
     }
 
     document.getElementById("profile-avatar").src = profileUser.avatar_url || "/assets/pfp.png";
-    document.getElementById("site-banner-img").src = profileUser.banner_url || "/assets/remi.png";
+    document.getElementById("site-banner-img").src = profileUser.banner_url || "/assets/remi.png"; // overrides nav-bar.js's default with this profile's own banner
     document.getElementById("profile-display-name").textContent = profileUser.display_name || profileUser.username;
     document.getElementById("profile-username").textContent = `@${profileUser.username}`;
     document.getElementById("profile-bio").textContent = profileUser.bio || "No bio yet.";
@@ -37,12 +36,7 @@ async function loadProfile() {
         setupFollowButton(currentUserId, profileId);
     }
 
-    // 2. posts
     loadPosts(profileId);
-
-    // 3. best friends
-
-    // 4. stats
     loadStats(profileId);
 }
 
@@ -111,59 +105,6 @@ document.querySelectorAll(".tabs-btn").forEach(btn => {
         renderPosts();
     });
 });
-
-async function loadBestFriends(profileId) {
-    const { data: following, error: followingError } = await supabaseClient
-        .from("follows")
-        .select("following_id")
-        .eq("follower_id", profileId);
-
-    if (followingError) {
-        console.error("Failed to load following:", followingError.message);
-        return;
-    }
-
-    const followingIds = following.map(row => row.following_id);
-
-    if (followingIds.length === 0) {
-        renderFriendsEmpty();
-        return;
-    }
-
-    const { data: mutuals, error: mutualsError } = await supabaseClient
-        .from("follows")
-        .select("follower_id")
-        .eq("following_id", profileId)
-        .in("follower_id", followingIds)
-        .limit(5);
-
-    if (mutualsError) {
-        console.error("Failed to load mutuals:", mutualsError.message);
-        return;
-    }
-
-    const friendIds = mutuals.map(row => row.follower_id);
-
-    if (friendIds.length === 0) {
-        renderFriendsEmpty();
-        return;
-    }
-
-    const { data: friends } = await supabaseClient
-        .from("users")
-        .select("id, display_name, username, avatar_url")
-        .in("id", friendIds);
-
-    document.getElementById("friends-list").innerHTML = friends.map(friend => `
-        <a href="/profile/?id=${friend.id}" class="friend-bubble" title="${friend.display_name || friend.username}">
-            <img class="friend-bubble-avatar" src="${friend.avatar_url || '/assets/pfp.png'}" alt="">
-        </a>
-    `).join("");
-}
-
-function renderFriendsEmpty() {
-    document.getElementById("friends-list").innerHTML = `<p class="friends-empty">No friends yet.</p>`;
-}
 
 async function getFriendCount(profileId) {
     const { data: following } = await supabaseClient

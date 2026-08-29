@@ -1,0 +1,215 @@
+/* ============================
+   SETTINGS PAGE
+   ============================ */
+.settings-box {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+    padding: 20px;
+    background: var(--bg-elevated);
+}
+
+.settings-title {
+    color: var(--text-primary);
+    font-size: 1.3em;
+    margin: 0 0 16px 0;
+}
+
+.settings-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
+}
+
+.settings-status {
+    color: var(--text-muted);
+    font-size: 0.8em;
+    margin: 4px 0 0 0;
+}
+
+/* ---- SIDEBAR / TABS ---- */
+.settings-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-right: 1px solid var(--border-default);
+    padding-right: 16px;
+}
+
+.settings-tab {
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font: inherit;
+    font-size: 0.95em;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.settings-tab:hover {
+    color: var(--text-primary);
+}
+
+.settings-tab.active {
+    background: var(--accent-soft);
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+/* ---- CONTENT / PANELS ---- */
+.settings-content {
+    min-width: 0;
+}
+
+.settings-panel {
+    display: none;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.settings-panel.active {
+    display: flex;
+}
+
+.settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-default);
+}
+
+.settings-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.settings-section-title {
+    color: var(--text-primary);
+    font-size: 1em;
+    margin: 0;
+}
+
+.settings-section-desc {
+    color: var(--text-muted);
+    font-size: 0.85em;
+    margin: 0;
+}
+
+.settings-field {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.settings-input {
+    flex: 1;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+    font: inherit;
+    color: var(--text-primary);
+    background: var(--bg-page);
+}
+
+.settings-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.settings-textarea {
+    min-height: 90px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+/* ---- AVATAR / BANNER PREVIEWS ---- */
+.settings-avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.settings-avatar-preview {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--border-default);
+}
+
+.settings-banner-preview {
+    width: 100%;
+    aspect-ratio: 6 / 1;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border-default);
+    margin-bottom: 8px;
+}
+
+.settings-banner-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ---- INTEREST TAG PICKER ---- */
+.settings-tags-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-option {
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    background: none;
+    border: 1px solid var(--border-default);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.tag-option:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+}
+
+.tag-option.selected {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* ---- DANGER ZONE ---- */
+.settings-section-danger .settings-section-title {
+    color: var(--danger);
+}
+
+.danger-link {
+    align-self: flex-start;
+    padding: 6px 12px;
+    border: 1px solid var(--danger);
+    border-radius: 6px;
+    background: none;
+    color: var(--danger);
+    font: inherit;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.danger-link:hover {
+    background: color-mix(in srgb, var(--danger) 20%, transparent);
+}
+
+.settings-save-btn {
+    align-self: flex-start;
+}

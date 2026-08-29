@@ -8,7 +8,8 @@
         <link rel="stylesheet" href="../shared-css/shared.css">
         <link rel="stylesheet" href="../shared-css/load-state.css">
         <link rel="stylesheet" href="../dashboard/dashboard.css">
-        <link rel="stylesheet" href="../shared-css/wip.css">
+        <link rel="stylesheet" href="../profile/profile.css">
+        <link rel="stylesheet" href="../settings/settings.css">
         <link rel="stylesheet" href="../shared-css/responsiveness.css">
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,96 +17,193 @@
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
     </head>
     <body>
-        <main class="column-layout">
-            <aside class="left-bar">
-                <div class="left-bar-logo">
-                    
+        <div class="page-wrapper">
+            <div class="site-banner">
+                <img class="site-banner-img" id="site-banner-img" src="" alt="">
+                <div class="grain-overlay"></div>
+            </div>
+
+            <div class="nav-bar">
+                <div class="search-wrapper">
+                    <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M11.5 11.5L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+
+                    <input type="text" id="search-input" class="search-input" placeholder="Search users or posts...">
+
+                    <button class="search-clear" id="search-clear" style="display:none;" aria-label="Clear search">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+
+                    <div class="search-suggestions" id="search-suggestions"></div>
                 </div>
 
-                <nav class="left-bar-links">
-                    <a href="../dashboard/" class="left-bar-link" id="dashboard-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);"><path fill="currentColor" d="M12 3s-6.186 5.34-9.643 8.232A1.04 1.04 0 0 0 2 12a1 1 0 0 0 1 1h2v7a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-4h4v4a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-7h2a1 1 0 0 0 1-1a.98.98 0 0 0-.383-.768C18.184 8.34 12 3 12 3"></path></svg>
+                <nav class="nav-links">
+                    <a href="../dashboard/">
                         <span>Home</span>
                     </a>
-
-                    <a href="../discover/" class="left-bar-link" id="discover-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M11.307 9.739L15 9l-.739 3.693a2 2 0 0 1-1.568 1.569L9 15l.739-3.693a2 2 0 0 1 1.568-1.568"></path></g></svg>
-                        <span>Discover</span>
-                    </a>
-
-                    <a href="../mail/" class="left-bar-link" id="mail-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="m3 7l9 6l9-6"></path></g></svg>
+                    <p>|</p>
+                    <a href="../mail/">
                         <span>Mail</span>
                     </a>
+                    <p>|</p>
+                    <div class="profile-dropdown">
+                        <button class="profile-trigger">
+                            <span class="profile-name">Guest</span>
+                            <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
 
-                    <a href="../settings/" class="left-bar-link active" id="settings-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);"><path fill="currentColor" d="m9.25 22l-.4-3.2q-.325-.125-.612-.3t-.563-.375L4.7 19.375l-2.75-4.75l2.575-1.95Q4.5 12.5 4.5 12.338v-.675q0-.163.025-.338L1.95 9.375l2.75-4.75l2.975 1.25q.275-.2.575-.375t.6-.3l.4-3.2h5.5l.4 3.2q.325.125.613.3t.562.375l2.975-1.25l2.75 4.75l-2.575 1.95q.025.175.025.338v.674q0 .163-.05.338l2.575 1.95l-2.75 4.75l-2.95-1.25q-.275.2-.575.375t-.6.3l-.4 3.2zm2.8-6.5q1.45 0 2.475-1.025T15.55 12t-1.025-2.475T12.05 8.5q-1.475 0-2.488 1.025T8.55 12t1.013 2.475T12.05 15.5"></path></svg>
-                        <span>Settings</span>
-                    </a>
-
-                    <a href="../profile/" class="left-bar-link" id="profile-link">
-                        <img class="profile-avatar" src="../public/assets/default profile picture.png" alt="">
-                        <span class="profile-name">Profile</span>
-                    </a>
-
-                    <a href="../new/" class="left-bar-link" id="new-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);"><path fill="currentColor" d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5v2H5v14h14v-5z"></path><path fill="currentColor" d="M21 7h-4V3h-2v4h-4v2h4v4h2V9h4z"></path></svg>
-                        <span>Create</span>
-                    </a>
-
-                    <a href="../auth/" class="left-bar-link" id="auth-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);">
-                            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                                <path d="M16 17l5-5-5-5"/>
-                                <path d="M21 12H9"/>
-                            </g>
-                        </svg>
-                        <span id="auth-link-text">Log Out</span>
-                    </a>
+                        <div class="dropdown-menu">
+                            <a href="../profile/" class="dropdown-item">
+                                <img class="profile-avatar" src="/assets/pfp.png" alt="">
+                                <span class="profile-blog">Guest's Blog</span>
+                            </a>
+                            <a href="../settings/" class="dropdown-item" id="settings-link">
+                                <span>Settings</span>
+                            </a>
+                            <a href="../auth/" class="dropdown-item" id="auth-link">
+                                <span id="auth-link-text">Log out</span>
+                            </a>
+                        </div>
+                    </div>
                 </nav>
-            </aside>
+            </div>
 
-            <aside class="center-bar">
-                <div class="topic-wraper">
-                    <div class="topic-tabs">
-                        <button type="button" class="tab-btn active" id="tab-recent" data-tab="recent">Recent</button>
-                        <button type="button" class="tab-btn" id="tab-following" data-tab="following">Following</button>
-                        <button type="button" class="tab-btn" id="tab-preferences">Preferences</button>
+            <div class="main-thing">
+                <div class="settings-box">
+                    <h1 class="settings-title">Settings</h1>
+
+                    <div class="settings-layout">
+                        <div class="settings-sidebar">
+                            <button class="settings-tab active" data-panel="account">Account</button>
+                            <button class="settings-tab" data-panel="profile">Profile</button>
+                        </div>
+
+                        <div class="settings-content">
+                            <!-- ACCOUNT PANEL -->
+                            <div class="settings-panel active" id="panel-account">
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title">Change Username</h3>
+                                    <p class="settings-section-desc">This changes your @handle across the site.</p>
+                                    <div class="settings-field">
+                                        <input type="text" id="username-input" class="settings-input" placeholder="New username">
+                                        <button id="username-save-btn" class="edit-link">Save</button>
+                                    </div>
+                                    <p id="username-status" class="settings-status"></p>
+                                </div>
+
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title">Change Email</h3>
+                                    <p class="settings-section-desc">Used for login and account recovery.</p>
+                                    <div class="settings-field">
+                                        <input type="email" id="email-input" class="settings-input" placeholder="New email address">
+                                        <button id="email-save-btn" class="edit-link">Save</button>
+                                    </div>
+                                    <p id="email-status" class="settings-status"></p>
+                                </div>
+
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title">Change Password</h3>
+                                    <p class="settings-section-desc">Choose a new password for your account.</p>
+                                    <div class="settings-field">
+                                        <input type="password" id="new-password-input" class="settings-input" placeholder="New password">
+                                    </div>
+                                    <div class="settings-field">
+                                        <input type="password" id="confirm-password-input" class="settings-input" placeholder="Confirm new password">
+                                        <button id="password-save-btn" class="edit-link">Save</button>
+                                    </div>
+                                </div>
+
+                                <div class="settings-section settings-section-danger">
+                                    <h3 class="settings-section-title">Delete Account</h3>
+                                    <p class="settings-section-desc">This permanently deletes your account and all your posts. This cannot be undone.</p>
+                                    <button id="delete-account-btn" class="danger-link">Delete Account</button>
+                                </div>
+                            </div>
+
+                            <!-- PROFILE PANEL -->
+                            <div class="settings-panel" id="panel-profile">
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title">Profile Picture</h3>
+                                    <div class="settings-avatar-row">
+                                        <img id="current-avatar" class="settings-avatar-preview" src="/assets/pfp.png" alt="">
+                                        <button id="avatar-btn" class="edit-link" type="button">Upload New</button>
+                                        <input type="file" id="avatar-input" accept="image/*" style="display:none;">
+                                    </div>
+                                </div>
+
+
+
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title">Display Name</h3>
+                                    <div class="settings-field">
+                                        <input type="text" id="display-name-input" class="settings-input" placeholder="Display name">
+                                        <button id="display-name-save-btn" class="edit-link">Save</button>
+                                    </div>
+                                </div>
+
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title">Bio</h3>
+                                    <div class="settings-field">
+                                        <textarea id="bio-input" class="settings-input settings-textarea" placeholder="Tell people about yourself..."></textarea>
+                                    </div>
+                                    <button id="bio-save-btn" class="edit-link settings-save-btn">Save Bio</button>
+                                </div>
+
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title">Interests</h3>
+                                    <p class="settings-section-desc">Pick tags that reflect what you post about.</p>
+                                    <div id="interests-picker" class="settings-tags-picker">
+                                        <button type="button" class="tag-option" data-tag="Music">Music</button>
+                                        <button type="button" class="tag-option" data-tag="Photography">Photography</button>
+                                        <button type="button" class="tag-option" data-tag="Videography">Videography</button>
+                                        <button type="button" class="tag-option" data-tag="Gaming">Gaming</button>
+                                        <button type="button" class="tag-option" data-tag="Art">Art</button>
+                                        <button type="button" class="tag-option" data-tag="Literature">Literature</button>
+                                    </div>
+                                    <button id="interests-save-btn" class="edit-link settings-save-btn">Save Interests</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="wip-view">
-                    <div class="wip-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#A4243B" stroke-width="1.5">
-                            <circle cx="12" cy="12" r="9" />
-                            <path d="M12 7v5l3 3" />
-                        </svg>
-                    </div>
-                    <h3>Work in progress</h3>
-                    <p>This page isn't ready yet. Check back soon.</p>
+            <footer class="bottom">
+                <div class="footer-bar">
+                    <p id="profile-joindate" class="profile-joindate"></p>
+
+                    <a href="" class="footer-link">
+                        
+                    </a>
                 </div>
-            </aside>
+            </footer>
+        </div>
 
-            <aside class="right-bar">
-                <input type="search" placeholder="Looking for something...">
-            </aside>
-        </main>
+        <script>
+            document.querySelectorAll('.settings-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelector('.settings-tab.active').classList.remove('active');
+                    tab.classList.add('active');
 
-        <button type="button" class="mobile-fab" id="mobile-new-post-btn" aria-label="New Post">
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="24" height="24" viewBox="0 0 24 24" style="color: currentColor; opacity: 1; transform: rotate(0deg);"><path fill="currentColor" d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5v2H5v14h14v-5z"></path><path fill="currentColor" d="M21 7h-4V3h-2v4h-4v2h4v4h2V9h4z"></path></svg>
-        </button>
+                    document.querySelector('.settings-panel.active').classList.remove('active');
+                    document.getElementById(`panel-${tab.dataset.panel}`).classList.add('active');
+                });
+            });
+        </script>
 
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
         <script src="../shared-js/supabase-config.js"></script>
-        <script src="../dashboard/timeline.js"></script>
+        <script src="../shared-js/nav-bar.js"></script>
         <script src="../shared-js/update-avatar.js"></script>
         <script src="../shared-js/logout.js"></script>
-
-        <script>
-            document.querySelector("#mobile-new-post-btn").addEventListener("click", () => {
-                window.location.href = "../new/";
-            })
-        </script>
+        <script src="../profile/profile.js"></script>
+        <script src="../shared-js/search.js"></script>
+        <script src="../settings/settings.js"></script>
     </body>
 </html>
