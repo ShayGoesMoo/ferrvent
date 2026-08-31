@@ -4,10 +4,9 @@
 .settings-box {
     width: 100%;
     box-sizing: border-box;
-    border: 1px solid var(--border-default);
-    border-radius: 8px;
     padding: 20px;
     background: var(--bg-elevated);
+    margin-bottom: 30px;
 }
 
 .settings-title {

@@ -34,9 +34,6 @@ async function loadProfile() {
     const avatarWrapper = document.getElementById("avatar-wrapper");
     avatarImg.onload = () => avatarWrapper.classList.remove("avatar-loading");
     avatarImg.src = profileUser.avatar_url || "/assets/pfp.png";
-    const bannerImg = document.getElementById("site-banner-img");
-    const bannerWrapper = document.getElementById("site-banner-wrapper");
-    bannerImg.onload = () => bannerWrapper.classList.remove("banner-loading");
 
     document.getElementById("profile-avatar").src = profileUser.avatar_url || "/assets/pfp.png";
     document.getElementById("site-banner-img").src = "/assets/1.png";

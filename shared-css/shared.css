@@ -13,7 +13,7 @@ body {
     font-size: 14px;
     font-family: "Noto Sans JP", sans-serif;
     font-optical-sizing: auto;
-    font-weight: 400;
+    font-weight: 550;
     font-style: normal;
 }
 
@@ -36,22 +36,23 @@ body {
 
     /* text */
     --text-primary: #f1eee8;
-    --text-muted: #c9c4bd;
+    --text-muted: #b6b2ad;
 
     /* borders */
     --border-default: #18171b;
     --border-elevated: #262427;
 
     /* THE accent — vivid violet */
-    --accent: #be2631;
-    --accent-soft: color-mix(in srgb, var(--accent) 22%, transparent);
+    --accent: #4b9463;
+    --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
 
     /* secondary decorative accents */
-    --accent-teal: #4fc3d4;
-    --accent-orchid: #e28fd9;
+    --accent-teal: #318f39;
+    --accent-orchid: #ce3a6b;
     --accent-sage: #7fd677;
     --accent-peach: #e2a26c;
     --accent-desert: #d1b15e;
+    --accent-purple: #563763;
 
     --danger: #ff5c4d;
 }

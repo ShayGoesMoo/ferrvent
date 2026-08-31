@@ -19,7 +19,6 @@ body {
 .main-thing {
     width: 100%;
     box-sizing: border-box;
-    padding: 0 10px 50px 10px;
 }
 
 
@@ -337,7 +336,6 @@ body {
 .profile-box {
     width: 100%;
     box-sizing: border-box;
-    border: 1px solid var(--border-default);
     border-radius: 8px;
     background: var(--bg-elevated);
 }
@@ -571,6 +569,7 @@ body {
 
     scrollbar-width: thin;
     scrollbar-color: var(--border-default) transparent;
+    margin-bottom: 30px;
 }
 
 .posts-box::-webkit-scrollbar {
@@ -602,22 +601,24 @@ body {
 }
 
 .tabs-btn {
-    display: flex;
-    align-items: center;
     background: none;
     border: none;
-    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 6px;
     font: inherit;
     color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
 }
-
-.tabs-btn:hover {
-    color: var(--accent);
+ 
+.tabs-btn:hover { 
+    color: var(--text-primary); 
 }
-
+ 
 .tabs-btn.active {
-    color: var(--accent);
-    font-weight: 500;
+    background: var(--accent-soft);
+    color: var(--text-primary);
+    font-weight: 700;
 }
 
 .posts-grid-content {

@@ -13,9 +13,14 @@ document.addEventListener('click', () => {
     trigger.classList.remove('open');
 });
 
-// Default site banner (falls back to the site's own image on every page)
+// Default site banner (now the only banner — shows on every page)
 const siteBannerImg = document.getElementById('site-banner-img');
-if (siteBannerImg && !siteBannerImg.getAttribute('src')) {
+const siteBannerWrapper = document.getElementById('site-banner-wrapper');
+
+if (siteBannerImg) {
+    siteBannerImg.onload = () => {
+        if (siteBannerWrapper) siteBannerWrapper.classList.remove('banner-loading');
+    };
     siteBannerImg.src = '/assets/1.png';
 }
 
