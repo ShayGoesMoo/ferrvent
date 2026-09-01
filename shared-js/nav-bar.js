@@ -21,7 +21,7 @@ if (siteBannerImg) {
     siteBannerImg.onload = () => {
         if (siteBannerWrapper) siteBannerWrapper.classList.remove('banner-loading');
     };
-    siteBannerImg.src = '/assets/1.png';
+    siteBannerImg.src = '/assets/ferrvent-banner(3).png';
 }
 
 async function loadNavAvatar() {

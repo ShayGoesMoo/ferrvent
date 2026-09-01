@@ -36,7 +36,7 @@ async function loadProfile() {
     avatarImg.src = profileUser.avatar_url || "/assets/pfp.png";
 
     document.getElementById("profile-avatar").src = profileUser.avatar_url || "/assets/pfp.png";
-    document.getElementById("site-banner-img").src = "/assets/1.png";
+    document.getElementById("site-banner-img").src = "/assets/ferrvent-banner(3).png";
     document.getElementById("profile-display-name").textContent = profileUser.display_name || profileUser.username;
     document.getElementById("profile-username").textContent = `@${profileUser.username}`;
     document.getElementById("profile-bio").textContent = profileUser.bio || "No bio yet.";

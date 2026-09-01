@@ -28,7 +28,7 @@ body {
 .site-banner {
     position: relative;
     width: 100%;
-    aspect-ratio: 6 / 1;
+    aspect-ratio: 6 / 1.5;
     overflow: hidden;
     border-bottom: 2px solid var(--accent);
 }
