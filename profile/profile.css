@@ -11,7 +11,7 @@ body {
 .page-wrapper {
     max-width: 800px;
     margin: 0 auto;
-    background: var(--bg-wrapper);
+    background: var(--bg-page);
     min-height: 100vh;
     border: 1px solid var(--border-default);
 }
@@ -20,7 +20,6 @@ body {
     width: 100%;
     box-sizing: border-box;
 }
-
 
 /* ============================
    SITE BANNER (retro/film)
@@ -49,6 +48,33 @@ body {
     mix-blend-mode: overlay;
 }
 
+.banner-credit {
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(4px);
+    color: var(--text-primary);
+    font-size: 0.72em;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    transition: background 0.15s ease;
+    z-index: 2; /* sits above the grain overlay */
+}
+
+.banner-credit:hover {
+    background: rgba(0, 0, 0, 0.75);
+    color: var(--accent);
+}
+
+.banner-credit span {
+    font-weight: 700;
+}
+
 
 /* ============================
    NAVBAR
@@ -60,7 +86,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 10px 10px;
-    background: var(--bg-wrapper);
+    background: var(--bg-page);
 }
 
 .nav-links {
@@ -161,7 +187,7 @@ body {
     border-radius: 6px;
     font: inherit;
     color: var(--text-primary);
-    background: var(--bg-elevated);
+    background: var(--bg-page);
 }
 
 .search-input:focus {
@@ -196,7 +222,7 @@ body {
     top: calc(100% + 6px);
     left: 0;
     width: 100%;
-    background: var(--bg-elevated);
+    background: var(--bg-page);
     border: 1px solid var(--border-default);
     border-radius: 6px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -297,7 +323,7 @@ body {
     top: 100%;
     right: 0;
     min-width: 180px;
-    background: var(--bg-elevated);
+    background: var(--bg-page);
     border-radius: 4px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     display: none;
@@ -336,8 +362,7 @@ body {
 .profile-box {
     width: 100%;
     box-sizing: border-box;
-    border-radius: 8px;
-    background: var(--bg-elevated);
+    background: var(--bg-page);
 }
 
 .profile-header {
@@ -415,7 +440,7 @@ body {
 }
 
 .edit-link:hover {
-    background: var(--bg-elevated);
+    background: var(--bg-page);
     border-color: var(--accent);
 }
 
@@ -563,13 +588,13 @@ body {
 
 .posts-box {
     border-top: 1px solid var(--border-default);
+    min-height: 300px;
     max-height: 600px;
     overflow-y: auto;
     box-sizing: border-box;
 
     scrollbar-width: thin;
     scrollbar-color: var(--border-default) transparent;
-    margin-bottom: 30px;
 }
 
 .posts-box::-webkit-scrollbar {
@@ -594,7 +619,7 @@ body {
     top: 0;
     z-index: 10;
     display: flex;
-    background: var(--bg-elevated);
+    background: var(--bg-page);
     border-bottom: 1px solid var(--border-default);
     padding: 10px;
     gap: 10px;
@@ -634,6 +659,23 @@ body {
     overflow: hidden;
     cursor: pointer;
     border-radius: 4px;
+}
+
+.post-card {
+    position: relative; /* anchors the collection icon */
+}
+
+.post-collection-icon {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    color: #fff;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+}
+
+.post-collection-icon .icon-border-rect {
+    stroke: #bbbbbb;
+    stroke-width: 1.5;
 }
 
 .post-thumb {
@@ -732,7 +774,7 @@ body {
     left: 0;
     width: 100%;
     height: 32px;
-    background: var(--bg-wrapper);
+    background: var(--bg-page);
     border-top: 1px solid var(--border-default);
     z-index: 50;
     display: flex;

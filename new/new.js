@@ -1,63 +1,97 @@
 const filePanel = document.getElementById("file-panel");
 const fileInput = document.getElementById("file-input");
 const filePlaceholder = document.getElementById("file-placeholder");
-const previewWrapper = document.getElementById("preview-wrapper");
-const previewFile = document.getElementById("preview-file");
-const changeFileBtn = document.getElementById("change-file-btn");
-const removeFileBtn = document.getElementById("remove-file-btn");
+const previewGrid = document.getElementById("preview-grid");
 const postBtn = document.getElementById("post-btn");
 const captionInput = document.getElementById("caption");
 const createForm = document.getElementById("create-new");
 
-let selectedFile = null;
-let detectedMediaType = null;
+let selectedFiles = [];
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10mb max
+const MAX_FILES = 6;
 
 function resetFilePanel() {
-    selectedFile = null;
-    detectedMediaType = null;
+    selectedFiles = [];
     fileInput.value = "";
-    previewFile.src = "";
-    previewWrapper.style.display = "none";
-    filePlaceholder.style.display = "flex";
+    renderPreviewGrid();
 }
 
-function setFile(file) {
-    selectedFile = file;
-    detectedMediaType = file.type === "image/gif" ? "gif" : "image";
-    previewFile.src = URL.createObjectURL(file);
+function addFiles(newFiles) {
+    for (const file of newFiles) {
+        if (selectedFiles.length >= MAX_FILES) {
+            showToast(`You can only add up to ${MAX_FILES} images.`, "error");
+            break;
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+            showToast(`"${file.name}" is too big — max 10mb.`, "error");
+            continue;
+        }
+
+        selectedFiles.push(file);
+    }
+
+    fileInput.value = ""; // reset so selecting the same file again still fires "change"
+    renderPreviewGrid();
+}
+
+function removeFileAt(index) {
+    selectedFiles.splice(index, 1);
+    renderPreviewGrid();
+}
+
+function renderPreviewGrid() {
+    if (selectedFiles.length === 0) {
+        filePlaceholder.style.display = "flex";
+        previewGrid.style.display = "none";
+        previewGrid.innerHTML = "";
+        return;
+    }
+
     filePlaceholder.style.display = "none";
-    previewWrapper.style.display = "block";
+    previewGrid.style.display = "grid";
+
+    previewGrid.innerHTML = selectedFiles.map((file, index) => `
+        <div class="preview-tile">
+            <img src="${URL.createObjectURL(file)}" alt="">
+            <button type="button" class="remove-tile-btn" data-index="${index}" aria-label="Remove">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+    `).join("");
+
+    if (selectedFiles.length < MAX_FILES) {
+        previewGrid.innerHTML += `
+            <div class="add-more-tile" id="add-more-tile">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </div>
+        `;
+    }
+
+    previewGrid.querySelectorAll(".remove-tile-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            removeFileAt(parseInt(btn.dataset.index, 10));
+        });
+    });
+
+    document.getElementById("add-more-tile")?.addEventListener("click", () => {
+        fileInput.click();
+    });
 }
 
-// clicking the panel opens the file picker (but not when clicking change/remove)
-filePanel.addEventListener("click", (e) => {
-    if (!filePlaceholder.contains(e.target)) return;
-    if (previewWrapper.style.display === "block") return; // already have a file, use Change instead
+// clicking the empty placeholder opens the file picker
+filePlaceholder.addEventListener("click", () => {
     fileInput.click();
 });
 
 fileInput.addEventListener("change", () => {
-    const file = fileInput.files[0];
-    if (!file) return;
-
-    if (file.size > MAX_FILE_SIZE) {
-        showToast("File is too big — max 10mb.", "error");
-        fileInput.value = "";
-        return;
-    }
-
-    setFile(file);
-});
-
-changeFileBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    fileInput.click();
-});
-
-removeFileBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    resetFilePanel();
+    if (fileInput.files.length === 0) return;
+    addFiles(Array.from(fileInput.files));
 });
 
 createForm.addEventListener("submit", async (e) => {
@@ -88,6 +122,7 @@ createForm.addEventListener("submit", async (e) => {
         insertPayload = {
             user_id: session.user.id,
             media_url: null,
+            media_urls: null,
             media_type: "story",
             title: title,
             caption: storyBody,
@@ -95,42 +130,47 @@ createForm.addEventListener("submit", async (e) => {
     } else {
         const caption = captionInput.value.trim();
 
-        if (!caption && !selectedFile) {
+        if (!caption && selectedFiles.length === 0) {
             showToast("Add a caption or a photo before posting.", "error");
             postBtn.disabled = false;
             postBtn.textContent = "Post";
             return;
         }
 
-        let mediaUrl = null;
+        let mediaUrls = [];
         let mediaType = "text";
 
-        if (selectedFile) {
-            const fileExt = selectedFile.name.split(".").pop();
-            const filePath = `${session.user.id}/${crypto.randomUUID()}.${fileExt}`;
+        if (selectedFiles.length > 0) {
+            for (const file of selectedFiles) {
+                const fileExt = file.name.split(".").pop();
+                const filePath = `${session.user.id}/${crypto.randomUUID()}.${fileExt}`;
 
-            const { error: uploadError } = await supabaseClient.storage
-                .from("post-media")
-                .upload(filePath, selectedFile);
+                const { error: uploadError } = await supabaseClient.storage
+                    .from("post-media")
+                    .upload(filePath, file);
 
-            if (uploadError) {
-                showToast("Failed to upload file: " + uploadError.message, "error");
-                postBtn.disabled = false;
-                postBtn.textContent = "Post";
-                return;
+                if (uploadError) {
+                    showToast(`Failed to upload "${file.name}": ` + uploadError.message, "error");
+                    postBtn.disabled = false;
+                    postBtn.textContent = "Post";
+                    return;
+                }
+
+                const { data: urlData } = supabaseClient.storage
+                    .from("post-media")
+                    .getPublicUrl(filePath);
+
+                mediaUrls.push(urlData.publicUrl);
             }
 
-            const { data: urlData } = supabaseClient.storage
-                .from("post-media")
-                .getPublicUrl(filePath);
-
-            mediaUrl = urlData.publicUrl;
-            mediaType = detectedMediaType;
+            // any gif in the set marks the whole post as a gif post — otherwise treat as images
+            mediaType = selectedFiles.some(f => f.type === "image/gif") ? "gif" : "image";
         }
 
         insertPayload = {
             user_id: session.user.id,
-            media_url: mediaUrl,
+            media_url: mediaUrls[0] || null, // first image stays in media_url too, for anything still reading the old single-image field
+            media_urls: mediaUrls.length > 0 ? mediaUrls : null,
             media_type: mediaType,
             title: null,
             caption: caption,

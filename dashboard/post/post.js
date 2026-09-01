@@ -14,7 +14,7 @@ async function loadPost() {
 
     const { data: post, error } = await supabaseClient
         .from("posts")
-        .select("id, user_id, media_url, thumbnail_url, title, caption, media_type, created_at, edited_at, visibility, users!posts_user_id_fkey(username, avatar_url, display_name)")
+        .select("id, user_id, media_url, media_urls, thumbnail_url, title, caption, media_type, created_at, edited_at, visibility, users!posts_user_id_fkey(username, avatar_url, display_name)")
         .eq("id", postId)
         .single();
 
@@ -51,13 +51,13 @@ async function loadPost() {
         ${post.media_type === "story" ? `
             <div class="t-box-body">
                 <h4 class="story-title">${post.title}</h4>
-                <p class="item-caption">${post.caption || ""}</p>
+                <p class="item-caption">${escapeHtml(post.caption || "")}</p>
             </div>
         ` : `
             <div class="t-box-body">
-                <p class="item-caption">${post.caption || ""}</p>
+                <p class="item-caption">${escapeHtml(post.caption || "")}</p>
             </div>
-            ${post.media_url ? `<img class="post-media item-media" src="${post.media_url}" alt="">` : ""}
+            ${renderFullMediaBlock(post)}
         `}
 
         <div class="t-meta">
@@ -73,6 +73,7 @@ async function loadPost() {
     allowShare(post.id, postContainer);
     if (isOwner) postVisibility(postContainer);
 
+    // comment-form submit handler
     document.getElementById("comment-form").addEventListener("submit", async (e) => {
         e.preventDefault();
         const input = document.getElementById("comment-input");
@@ -84,12 +85,18 @@ async function loadPost() {
 
         const { error } = await supabaseClient
             .from("comments")
-            .insert([{ post_id: postId, user_id: session.user.id, comment_text: text }]);
+            .insert([{
+                post_id: postId,
+                user_id: session.user.id,
+                comment_text: text,
+                parent_id: replyingToId, // null for a top-level comment
+            }]);
 
         if (error) { alert("Failed to post comment: " + error.message); return; }
 
         input.value = "";
-        loadComments(postId, postContainer);
+        replyingToId = null; // reset after posting
+        loadComments(postId, document.getElementById("post-container"));
     });
 
     if (!isOwner) {
@@ -153,12 +160,9 @@ async function loadLikes(postId, postOwnerId, cardElement) {
 }
 
 async function loadComments(postId, postContainer) {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    const currentUserId = session?.user?.id || null;
-
     const { data: comments, error } = await supabaseClient
         .from("comments")
-        .select("id, comment_text, gif_url, created_at, edited_at, user_id, users!comments_user_id_fkey(username, avatar_url)")
+        .select("id, comment_text, gif_url, created_at, edited_at, user_id, parent_id, users!comments_user_id_fkey(username, avatar_url)")
         .eq("post_id", postId)
         .order("created_at", { ascending: true });
 
@@ -166,10 +170,7 @@ async function loadComments(postId, postContainer) {
 
     const commentList = document.getElementById("comment-list");
     const commentCountEl = postContainer.querySelector(".comment-count");
-    const commentTotalEl = document.getElementById("comment-total");
-
     if (commentCountEl) commentCountEl.textContent = comments.length;
-    if (commentTotalEl) commentTotalEl.textContent = `${comments.length} total`;
 
     commentList.innerHTML = "";
 
@@ -178,13 +179,19 @@ async function loadComments(postId, postContainer) {
         return;
     }
 
-    comments.forEach((comment) => {
+    const topLevel = comments.filter(c => !c.parent_id);
+    const repliesByParent = {};
+    comments.filter(c => c.parent_id).forEach(c => {
+        (repliesByParent[c.parent_id] ||= []).push(c);
+    });
+
+    function renderComment(comment, isReply) {
         const avatarSrc = comment.users.avatar_url || "/assets/pfp.png";
         const editedTag = comment.edited_at ? " (edited)" : "";
         const timeText = formatUploaded(comment.created_at);
 
         const div = document.createElement("div");
-        div.className = "comment";
+        div.className = isReply ? "comment reply" : "comment";
         div.innerHTML = `
             <a href="/profile/?user=${comment.users.username}"><img class="comment-avatar" src="${avatarSrc}" alt=""></a>
             <div class="comment-body">
@@ -192,16 +199,24 @@ async function loadComments(postId, postContainer) {
                     <a href="/profile/?user=${comment.users.username}" class="comment-handle">@${comment.users.username}</a>
                     <span class="comment-time">${timeText}${editedTag}</span>
                 </div>
-                <p class="comment-text">${comment.comment_text || ""}</p>
+                <p class="comment-text">${escapeHtml(comment.comment_text || "")}</p>
                 ${comment.gif_url ? `<img class="comment-gif" src="${comment.gif_url}" alt="">` : ""}
-                <button type="button" class="comment-reply" data-username="${comment.users.username}">Reply</button>
+                <button type="button" class="comment-reply" data-reply-id="${comment.id}" data-username="${comment.users.username}">Reply</button>
             </div>
         `;
         commentList.appendChild(div);
+    }
+
+    topLevel.forEach((comment) => {
+        renderComment(comment, false);
+        (repliesByParent[comment.id] || []).forEach((reply) => {
+            renderComment(reply, true); // always indented exactly one level
+        });
     });
 
     commentList.querySelectorAll(".comment-reply").forEach((btn) => {
         btn.addEventListener("click", () => {
+            replyingToId = btn.dataset.replyId;
             const input = document.getElementById("comment-input");
             input.value = `@${btn.dataset.username} `;
             input.focus();
@@ -326,17 +341,82 @@ function formatUploaded(dateStr) {
 
 loadPost();
 
+// replace the whole image-modal block at the bottom of post.js with this
 const imageModal = document.getElementById("image-modal");
 const imageModalImg = document.getElementById("image-modal-img");
 const imageModalClose = document.getElementById("image-modal-close");
+const imageModalPrev = document.getElementById("image-modal-prev");
+const imageModalNext = document.getElementById("image-modal-next");
+const imageModalCounter = document.getElementById("image-modal-counter");
+
+let modalGallery = [];
+let modalIndex = 0;
+
+function showModalImage() {
+    imageModalImg.src = modalGallery[modalIndex];
+    const multiple = modalGallery.length > 1;
+    imageModalPrev.style.display = multiple ? "flex" : "none";
+    imageModalNext.style.display = multiple ? "flex" : "none";
+    imageModalCounter.textContent = multiple ? `${modalIndex + 1} / ${modalGallery.length}` : "";
+}
 
 document.addEventListener("click", (e) => {
     const target = e.target.closest(".item-media");
     if (!target) return;
-    imageModalImg.src = target.src;
+
+    try {
+        modalGallery = JSON.parse(target.dataset.gallery || "[]");
+    } catch {
+        modalGallery = [target.src];
+    }
+    if (modalGallery.length === 0) modalGallery = [target.src];
+
+    modalIndex = parseInt(target.dataset.index || "0", 10);
+    showModalImage();
     imageModal.classList.add("open");
 });
 
-imageModalClose.addEventListener("click", () => { imageModal.classList.remove("open"); imageModalImg.src = ""; });
-imageModal.addEventListener("click", (e) => { if (e.target === imageModal) { imageModal.classList.remove("open"); imageModalImg.src = ""; } });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape" && imageModal.classList.contains("open")) { imageModal.classList.remove("open"); imageModalImg.src = ""; } });
+imageModalPrev.addEventListener("click", (e) => {
+    e.stopPropagation();
+    modalIndex = (modalIndex - 1 + modalGallery.length) % modalGallery.length;
+    showModalImage();
+});
+
+imageModalNext.addEventListener("click", (e) => {
+    e.stopPropagation();
+    modalIndex = (modalIndex + 1) % modalGallery.length;
+    showModalImage();
+});
+
+imageModalClose.addEventListener("click", () => {
+    imageModal.classList.remove("open");
+    imageModalImg.src = "";
+});
+
+imageModal.addEventListener("click", (e) => {
+    if (e.target === imageModal) {
+        imageModal.classList.remove("open");
+        imageModalImg.src = "";
+    }
+});
+
+document.addEventListener("keydown", (e) => {
+    if (!imageModal.classList.contains("open")) return;
+
+    if (e.key === "Escape") {
+        imageModal.classList.remove("open");
+        imageModalImg.src = "";
+    } else if (e.key === "ArrowLeft" && modalGallery.length > 1) {
+        modalIndex = (modalIndex - 1 + modalGallery.length) % modalGallery.length;
+        showModalImage();
+    } else if (e.key === "ArrowRight" && modalGallery.length > 1) {
+        modalIndex = (modalIndex + 1) % modalGallery.length;
+        showModalImage();
+    }
+});
+
+function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+}

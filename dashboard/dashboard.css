@@ -3,7 +3,7 @@
 .page-wrapper {
     max-width: 800px;
     margin: 0 auto;
-    background: var(--bg-wrapper);
+    background: var(--bg-page);
     min-height: 100vh;
     border: 1px solid var(--border-default);
 }
@@ -19,7 +19,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px;
-    background: var(--bg-wrapper);
+    background: var(--bg-page);
     border-bottom: 1px solid var(--border-default);
     font-size: 12px;
     color: var(--text-muted);
@@ -64,14 +64,13 @@
     flex-direction: column;
     width: 100%;
     overflow: hidden; /* keeps the first/last row's corners clipped to match the outer radius */
-    margin-bottom: 30px;
 }
 
 .t-box {
     border: none;
     border-bottom: 1px solid var(--border-default);
     border-radius: 0;
-    background: var(--bg-elevated);
+    background: var(--bg-page);
     transition: background 0.15s ease;
 }
 
@@ -131,6 +130,11 @@
     width: 11px;
     height: 11px;
     color: var(--accent);
+}
+
+.item-caption {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 
 .item-caption.expanded {
@@ -265,7 +269,7 @@
     top: 100%;
     right: 14px;
     margin-top: 4px;
-    background: var(--bg-elevated);
+    background: var(--bg-page);
     border: 1px solid var(--border-elevated);
     border-radius: 4px;
     overflow: hidden;
@@ -334,20 +338,32 @@ mark {
     max-height: 600px;
 }
 
-.t-collage-2 img,
-.t-collage-3 img,
-.t-collage-4 img {
-    object-fit: cover;
-    display: block;
-    filter: sepia(10%) saturate(85%) brightness(90%);
-    cursor: pointer;
-}
-
 .t-collage-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2px;
     background: var(--border-default);
+    height: 200px;
+}
+
+.t-collage-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+    background: var(--border-default);
+    height: 280px;
+}
+
+.t-collage-2 img,
+.t-collage-3 img,
+.t-collage-4 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: sepia(10%) saturate(85%) brightness(90%);
+    cursor: pointer;
 }
 
 .t-collage-2 img {
@@ -370,14 +386,6 @@ mark {
 
 .t-collage-3 .big {
     grid-row: 1 / 3;
-}
-
-.t-collage-4 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 2px;
-    background: var(--border-default);
 }
 
 .t-collage-4 img {

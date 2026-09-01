@@ -15,9 +15,7 @@ async function loadTimeline() {
 
     let query = supabaseClient
         .from("posts")
-        .select("id, user_id, media_url, thumbnail_url, title, caption, media_type, created_at, edited_at, visibility, users!posts_user_id_fkey(username, avatar_url, display_name)")
-        // NOTE: once you add a `media_urls` (text[]) column to `posts` for multi-photo support,
-        // add it to this select list — see the collage note below.
+        .select("id, user_id, media_url, media_urls, thumbnail_url, title, caption, media_type, created_at, edited_at, visibility, users!posts_user_id_fkey(username, avatar_url, display_name)")
         .not("visibility", "in", "(archived,private)")
         .order("created_at", { ascending: false });
 
@@ -102,7 +100,7 @@ async function loadTimeline() {
                 </div>
             ` : `
                 <div class="t-box-body">
-                    <p class="item-caption">${post.caption || ""}</p>
+                    <p class="item-caption">${escapeHtml(post.caption || "")}</p>
                 </div>
                 ${renderMediaBlock(post)}
             `}
@@ -146,53 +144,6 @@ async function loadTimeline() {
     });
 
     loadSuggestion(board, currentUserId);
-}
-
-// builds the media portion of a post: single image, or a collage for multiple photos.
-// pass an array on post.media_urls once that column exists — falls back to the single
-// legacy media_url field until then.
-function renderMediaBlock(post) {
-    const urls = post.media_urls && post.media_urls.length > 0
-        ? post.media_urls
-        : (post.media_url ? [post.media_url] : []);
-
-    if (urls.length === 0) return "";
-
-    if (urls.length === 1) {
-        return `<img class="post-media item-media" src="${urls[0]}" alt="">`;
-    }
-
-    if (urls.length === 2) {
-        return `
-            <div class="t-collage-2">
-                <img class="item-media" src="${urls[0]}" alt="">
-                <img class="item-media" src="${urls[1]}" alt="">
-            </div>
-        `;
-    }
-
-    if (urls.length === 3) {
-        return `
-            <div class="t-collage-3">
-                <img class="big item-media" src="${urls[0]}" alt="">
-                <img class="item-media" src="${urls[1]}" alt="">
-                <img class="item-media" src="${urls[2]}" alt="">
-            </div>
-        `;
-    }
-
-    // 4 or more — show first 4 tiles, with a "+N" overlay on the last if there's overflow
-    const remaining = urls.length - 4;
-    return `
-        <div class="t-collage-4">
-            <img class="item-media" src="${urls[0]}" alt="">
-            <img class="item-media" src="${urls[1]}" alt="">
-            <img class="item-media" src="${urls[2]}" alt="">
-            <div class="t-more-overlay" ${remaining > 0 ? `data-more="+${remaining}"` : ""}>
-                <img class="item-media" src="${urls[3]}" alt="">
-            </div>
-        </div>
-    `;
 }
 
 // drops one "who to follow" suggestion box into a column

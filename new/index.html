@@ -24,6 +24,9 @@
             <div class="site-banner banner-loading" id="site-banner-wrapper">
                 <img class="site-banner-img" id="site-banner-img" src="" alt="">
                 <div class="grain-overlay"></div>
+                <a href="" class="banner-credit" id="banner-credit">
+                    Art by <span id="banner-credit-name">···</span>
+                </a>
             </div>
 
             <div class="nav-bar">
@@ -114,8 +117,8 @@
                                 <!-- IMAGE POST PANEL -->
                                 <div class="settings-panel active" id="panel-post">
                                     <div class="settings-section">
-                                        <h3 class="settings-section-title">Photo or Gif</h3>
-                                        <input type="file" id="file-input" accept="image/*,image/gif" hidden>
+                                        <h3 class="settings-section-title">Photos or Gifs</h3>
+                                        <input type="file" id="file-input" accept="image/*,image/gif" multiple hidden>
 
                                         <div id="file-panel">
                                             <div class="file-placeholder" id="file-placeholder">
@@ -124,16 +127,11 @@
                                                     <circle cx="8.5" cy="9" r="1.5" stroke="currentColor" stroke-width="1.5"/>
                                                     <path d="M21 15l-5-5-9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                                 </svg>
-                                                <p class="settings-section-desc">Click to insert a photo or gif</p>
-                                                <span class="settings-section-desc">Max 10MB</span>
+                                                <p class="settings-section-desc">Click to insert photos or gifs</p>
+                                                <span class="settings-section-desc">Up to 6 images, 10MB each</span>
                                             </div>
 
-                                            <div class="preview-wrapper" id="preview-wrapper" style="display: none;">
-                                                <img id="preview-file" alt="Preview">
-                                                <div class="preview-actions">
-                                                    <button type="button" class="edit-link" id="change-file-btn">Change</button>
-                                                    <button type="button" class="danger-link" id="remove-file-btn">Remove</button>
-                                                </div>
+                                            <div class="preview-grid" id="preview-grid" style="display: none;">
                                             </div>
                                         </div>
                                     </div>
@@ -202,13 +200,6 @@
                     </div>
                 </div>
             </div>
-
-            <footer class="bottom">
-                <div class="footer-bar">
-                    <p class="profile-joindate">Creating something new</p>
-                    <a href="" class="footer-link"></a>
-                </div>
-            </footer>
         </div>
 
         <script>

@@ -24,6 +24,11 @@ if (siteBannerImg) {
     siteBannerImg.src = '/assets/ferrvent-banner(3).png';
 }
 
+// banner art credit — update these two lines whenever the banner artwork changes
+const bannerArtistUsername = "Hirayne"; // replace with the username of the artist
+document.getElementById("banner-credit").href = `/profile/?user=${bannerArtistUsername}`;
+document.getElementById("banner-credit-name").textContent = `@${bannerArtistUsername}`;
+
 async function loadNavAvatar() {
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) return;
@@ -42,7 +47,7 @@ async function loadNavAvatar() {
 
     if (navAvatar) navAvatar.src = currentUser.avatar_url || "/assets/pfp.png";
     if (navName) navName.textContent = currentUser.display_name || currentUser.username;
-    if (profileLink) profileLink.href = `../profile/?user=${currentUser.username}`;
+    if (profileLink) profileLink.href = `../../profile/?user=${currentUser.username}`;
 }
 
 loadNavAvatar();

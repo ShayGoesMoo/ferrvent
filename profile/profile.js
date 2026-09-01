@@ -75,7 +75,7 @@ async function loadPosts(profileId) {
 
     const { data: posts, error } = await supabaseClient
         .from("posts")
-        .select("id, media_url, media_type, caption, title, created_at")
+        .select("id, media_url, media_urls, media_type, caption, title, created_at")
         .eq("user_id", profileId)
         .order("created_at", { ascending: false });
 
@@ -104,18 +104,27 @@ function renderPosts() {
     }
 
     if (activeTab === "photos") {
-        contentEl.innerHTML = filtered.map(post => `
-            <div class="post-card" onclick="window.location.href='/dashboard/post/?id=${post.id}'">
-                <img class="post-thumb" src="${post.media_url}" alt="">
-            </div>
-        `).join("");
-    } else {
-        contentEl.innerHTML = filtered.map(post => `
-            <div class="text-post-row" onclick="window.location.href='/dashboard/post/?id=${post.id}'">
-                <span class="text-post-title">${post.title || post.caption || "Untitled"}</span>
-                <span class="text-post-date">${formatDate(post.created_at)}</span>
-            </div>
-        `).join("");
+        contentEl.innerHTML = filtered.map(post => {
+            const urls = post.media_urls && post.media_urls.length > 0
+                ? post.media_urls
+                : (post.media_url ? [post.media_url] : []);
+            const hasMultiple = urls.length > 1;
+            const thumbUrl = urls[0] || "";
+
+            return `
+                <div class="post-card" onclick="window.location.href='/dashboard/post/?id=${post.id}'">
+                    <img class="post-thumb" src="${thumbUrl}" alt="">
+                    ${hasMultiple ? `
+                        <svg class="post-collection-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="7" y="7" width="14" height="14" rx="2" fill="currentColor"/>
+                            <rect class="icon-border-rect" x="3" y="3" width="14" height="14" rx="2" fill="currentColor"/>
+                        </svg>
+                    ` : ""}
+                    <span class="post-caption">${truncate(post.title || post.caption || "", 20)}</span>
+                    <span class="post-date">${formatDate(post.created_at)}</span>
+                </div>
+            `;
+        }).join("");
     }
 }
 

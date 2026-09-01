@@ -3,12 +3,14 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ferrvent</title>
+        <link rel="icon" href="../assets/icon.png">
+        <title>Ferrvent ( ˶°ㅁ°) !!</title>
 
         <link rel="stylesheet" href="../shared-css/shared.css">
         <link rel="stylesheet" href="../shared-css/load-state.css">
         <link rel="stylesheet" href="../auth/auth.css">
         <link rel="stylesheet" href="../shared-css/responsiveness.css">
+        <link rel="stylesheet" href="../profile/profile.css">
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,50 +18,69 @@
     </head>
     <body>
         <div class="auth-wrapper">
-            <div class="auth-container">
-                <div class="auth-tabs">
-                    <button type="button" class="auth-tab active" data-tab="login">Login</button>
-                    <button type="button" class="auth-tab" data-tab="register">Register</button>
+
+            <div class="auth-form-panel">
+                <div class="auth-form-inner">
+                    <div class="auth-tabs">
+                        <button type="button" class="auth-tab active" data-tab="login">Login</button>
+                        <button type="button" class="auth-tab" data-tab="register">Register</button>
+                    </div>
+
+                    <div class="auth-heading">
+                        <h1 id="auth-heading-title">Welcome back!</h1>
+                        <p id="auth-heading-sub">Creation network for everyone.</p>
+                    </div>
+
+                    <form class="auth-form" id="login-form">
+                        <label>Username or Email</label>
+                        <input type="text" id="identifier" name="identifier" placeholder="Enter username or email address" required>
+
+                        <label>Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter password" required>
+
+                        <input type="submit" id="login-submit" value="Sign in">
+
+                        <p class="disclaimer">By completing registration or logging in with an existing account, you agree to the <a href="">User Agreement and Privacy Policy</a>.</p>
+                    </form>
+
+                    <form class="auth-form" id="register-form" style="display: none;">
+                        <label>Username</label>
+                        <input type="text" id="username" name="username" placeholder="Choose a unique name" required>
+                        <span class="field-hint" id="username-hint">3–12 characters: letters, numbers, underscores, periods, dashes</span>
+
+                        <label>Email</label>
+                        <input type="email" id="email_address" name="email_address" placeholder="Enter a unique email address" required>
+                        <span class="field-hint" id="email_address-hint"></span>
+
+                        <label>Password</label>
+                        <input type="password" id="user_password" name="user_password" placeholder="Enter a strong password" required>
+                        <span class="field-hint" id="user_password-hint">8+ characters, with uppercase, lowercase, a number, and a symbol</span>
+
+                        <label>Confirm Password</label>
+                        <input type="password" id="confirm_user_password" name="confirm_user_password" placeholder="Re-enter your password" required>
+                        <span class="field-hint" id="confirm_user_password-hint"></span>
+
+                        <input type="submit" id="register-submit" value="Create account">
+
+                        <p class="disclaimer">By completing registration or logging in with an existing account, you agree to the <a href="">User Agreement and Privacy Policy</a>.</p>
+                    </form>
                 </div>
-
-                <form class="auth-form" id="login-form">
-                    <label>Username or Email</label>
-                    <input type="text" id="identifier" name="identifier" placeholder="Enter username or email address" required>
-
-                    <label>Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter password" required>
-
-                    <p class="disclaimer">By completing registeration or logging in with an existing account, you agree to the <a href="">User Agreement and Privacy Policy</a>.</p>
-                    <input type="submit" id="login-submit" value="Login">
-                </form>
-
-                <form class="auth-form" id="register-form" style="display: none;">
-                    <label>Username</label>
-                    <input type="text" id="username" name="username" placeholder="Choose a unique name" required>
-                    <span class="field-hint" id="username-hint">3–12 characters: letters, numbers, underscores, periods, dashes</span>
-
-                    <label>Email</label>
-                    <input type="email" id="email_address" name="email_address" placeholder="Enter a unique email address" required>
-                    <span class="field-hint" id="email_address-hint"></span>
-
-                    <label>Password</label>
-                    <input type="password" id="user_password" name="user_password" placeholder="Enter a strong password" required>
-                    <span class="field-hint" id="user_password-hint">8+ characters, with uppercase, lowercase, a number, and a symbol</span>
-
-                    <label>Confirm Password</label>
-                    <input type="password" id="confirm_user_password" name="confirm_user_password" placeholder="Re-enter your password" required>
-                    <span class="field-hint" id="confirm_user_password-hint"></span>
-
-                    <input type="submit" id="register-submit" value="Register">
-
-                    <p class="disclaimer">By completing registeration or logging in with an existing account, you agree to the <a href="">User Agreement and Privacy Policy</a>.</p>
-                </form>
             </div>
+
+            <div class="auth-art-panel">
+                <img class="auth-art-img" src="/assets/authbanner.jpg" alt="">
+                <div class="grain-overlay"></div>
+                <a href="/profile/?user=artistname" class="banner-credit" id="auth-art-credit">
+                    Art by <span id="auth-art-credit-name">@Hirayne</span>
+                </a>
+            </div>
+
         </div>
-        
+
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
         <script src="../shared-js/supabase-config.js"></script>
-        <script src="../auth/auth.js" ></script>
+        <script src="../auth/auth.js"></script>
         <script src="../auth/auth-validation.js"></script>
+        <script src="../shared-js/nav-bar.js"></script>
     </body>
 </html>
