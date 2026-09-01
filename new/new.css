@@ -121,6 +121,12 @@
     color: var(--text-primary);
 }
 
+.note {
+    font-size: 0.85em;
+    color: var(--text-muted);
+    margin-top: 8px;
+}
+
 /* ---- select dropdown arrow ---- */
 .settings-select {
     flex: none; /* override .settings-input's flex: 1 — this field shouldn't stretch */
