@@ -29,24 +29,19 @@ body {
 }
 
 :root {
-    /* backgrounds — neutral warm-charcoal, slight cool/purple undertone */
-    --bg-page: #0d0d0d;
-    --bg-wrapper: #0f0f0f;
-    --bg-elevated: #111111;
+    --bg-page: #f0ede9;
+    --bg-wrapper: #f1ede3;
+    --bg-elevated: #faf7f0;
 
-    /* text */
-    --text-primary: #f1eee8;
-    --text-muted: #b6b2ad;
+    --text-primary: #2e2b27;
+    --text-muted: #645f58;
 
-    /* borders */
-    --border-default: #18171b;
-    --border-elevated: #262427;
+    --border-default: #d3ccbd;
+    --border-elevated: #bdb4a0;
 
-    /* THE accent — vivid violet */
     --accent: #4b9463;
     --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
 
-    /* secondary decorative accents */
     --accent-teal: #318f39;
     --accent-orchid: #ce3a6b;
     --accent-sage: #7fd677;

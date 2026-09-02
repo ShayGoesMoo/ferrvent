@@ -333,7 +333,6 @@ mark {
     aspect-ratio: 1 / 1;
     object-fit: cover;
     display: block;
-    filter: sepia(10%) saturate(85%) brightness(90%);
     cursor: pointer;
     max-height: 600px;
 }
@@ -362,7 +361,6 @@ mark {
     height: 100%;
     object-fit: cover;
     display: block;
-    filter: sepia(10%) saturate(85%) brightness(90%);
     cursor: pointer;
 }
 
