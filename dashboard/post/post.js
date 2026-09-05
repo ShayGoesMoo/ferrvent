@@ -51,13 +51,13 @@ async function loadPost() {
         ${post.media_type === "story" ? `
             <div class="t-box-body">
                 <h4 class="story-title">${post.title}</h4>
-                <p class="item-caption">${escapeHtml(post.caption || "")}</p>
+                <p class="item-caption"><strong class="caption-username">${post.users.username}</strong> ${escapeHtml(post.caption || "")}</p>
             </div>
         ` : `
+            ${renderMediaBlock(post)}
             <div class="t-box-body">
-                <p class="item-caption">${escapeHtml(post.caption || "")}</p>
+                <p class="item-caption"><strong class="caption-username">${post.users.username}</strong> ${escapeHtml(post.caption || "")}</p>
             </div>
-            ${renderFullMediaBlock(post)}
         `}
 
         <div class="t-meta">
@@ -102,6 +102,9 @@ async function loadPost() {
     if (!isOwner) {
         supabaseClient.rpc("increment_view_count", { target_post_id: post.id });
     }
+
+    const titleSnippet = post.title || (post.caption ? post.caption.slice(0, 40) : "Post");
+    document.title = `${titleSnippet} — @${post.users.username} | Ferrvent`;
 }
 
 async function loadLikes(postId, postOwnerId, cardElement) {

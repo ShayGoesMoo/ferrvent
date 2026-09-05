@@ -72,6 +72,7 @@
     border-radius: 0;
     background: var(--bg-page);
     transition: background 0.15s ease;
+    overflow: hidden;
 }
 
 .t-box:hover {
@@ -130,6 +131,11 @@
     width: 11px;
     height: 11px;
     color: var(--accent);
+}
+
+.caption-username {
+    color: var(--text-primary);
+    font-weight: 800;
 }
 
 .item-caption {
@@ -342,7 +348,15 @@ mark {
     grid-template-columns: 1fr 1fr;
     gap: 2px;
     background: var(--border-default);
-    height: 200px;
+    height: 320px;
+}
+
+.t-collage-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+    background: var(--border-default);
+    height: 280px;
 }
 
 .t-collage-4 {
@@ -351,7 +365,7 @@ mark {
     grid-template-rows: 1fr 1fr;
     gap: 2px;
     background: var(--border-default);
-    height: 280px;
+    height: 420px;
 }
 
 .t-collage-2 img,
@@ -359,35 +373,11 @@ mark {
 .t-collage-4 img {
     width: 100%;
     height: 100%;
+    min-width: 0;
+    min-height: 0;
     object-fit: cover;
     display: block;
     cursor: pointer;
-}
-
-.t-collage-2 img {
-    height: 200px;
-}
-
-.t-collage-3 {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 2px;
-    background: var(--border-default);
-    height: 260px;
-}
-
-.t-collage-3 img {
-    width: 100%;
-    height: 100%;
-}
-
-.t-collage-3 .big {
-    grid-row: 1 / 3;
-}
-
-.t-collage-4 img {
-    height: 140px;
 }
 
 .t-more-overlay {

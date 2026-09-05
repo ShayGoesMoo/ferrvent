@@ -96,13 +96,13 @@ async function loadTimeline() {
             ${post.media_type === "story" ? `
                 <div class="t-box-body">
                     <h4 class="story-title">${post.title}</h4>
-                    <p class="item-caption story-caption" data-full-text="${escapeHtml(post.caption || "")}">${getExcerpt(post.caption)}${getWordCount(post.caption) > 40 ? ` <button type="button" class="keep-reading-btn">Keep reading</button>` : ""}</p>
+                    <p class="item-caption"><strong class="caption-username">${post.users.username}</strong> ${escapeHtml(post.caption || "")}</p>
                 </div>
             ` : `
-                <div class="t-box-body">
-                    <p class="item-caption">${escapeHtml(post.caption || "")}</p>
-                </div>
                 ${renderMediaBlock(post)}
+                <div class="t-box-body">
+                    <p class="item-caption"><strong class="caption-username">${post.users.username}</strong> ${escapeHtml(post.caption || "")}</p>
+                </div>
             `}
 
             <div class="t-meta">

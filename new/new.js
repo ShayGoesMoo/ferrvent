@@ -8,7 +8,7 @@ const createForm = document.getElementById("create-new");
 
 let selectedFiles = [];
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10mb max
-const MAX_FILES = 6;
+const MAX_FILES = 4; // 4 images max
 
 function resetFilePanel() {
     selectedFiles = [];

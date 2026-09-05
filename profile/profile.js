@@ -51,6 +51,8 @@ async function loadProfile() {
 
     loadPosts(profileId);
     loadStats(profileId);
+
+    document.title = `${profileUser.display_name || profileUser.username} (@${profileUser.username}) | Ferrvent`;
 }
 
 function formatDate(isoString) {
