@@ -1,5 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const postId = params.get("id");
+let replyingToId = null;
 
 async function loadPost() {
     const postContainer = document.getElementById("post-container");
